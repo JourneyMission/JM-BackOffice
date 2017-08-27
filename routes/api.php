@@ -35,6 +35,7 @@ Route::group(['middleware' => 'auth:api'], function(){
 	Route::post('details', 'API\UserController@details');
 	Route::resource('Badges', BadgesController::class);
 	Route::resource('CategoryCheckpoints', CategoryCheckpointsController::class);
+	Route::resource('CategoryMissions', CategoryMissionsController::class);
 	Route::resource('Checkins', CheckinsController::class);
 	Route::resource('CheckpointPhotos', CheckpointPhotosController::class);
 	Route::resource('Checkpoints', CheckpointsController::class);

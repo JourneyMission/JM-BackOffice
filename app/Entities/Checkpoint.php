@@ -21,8 +21,18 @@ class Checkpoint extends Model implements Transformable
 		'Checkpoint_SpeacialScore',
 		'Checkpoint_StartDate',
 		'Checkpoint_EndDate',
+		'Checkpoint_StartTime',
+		'Checkpoint_EndTime',
 		'Provience_ID',
 		'Category_Checkpoint_ID',
 	];
 
+	
+
+    public function CategoryCheckpoint() {
+        return $this->belongsTo('App\Entities\CategoryCheckpoint','Category_Checkpoint_ID','id');
+    }
+    public function Provience() {
+        return $this->belongsTo('App\Entities\Provience','Provience_ID','id');
+    }
 }

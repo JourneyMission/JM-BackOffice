@@ -15,7 +15,7 @@ class CreateCheckpointsTable extends Migration
 	{
 		Schema::create('checkpoints', function(Blueprint $table) {
             $table->increments('id');
-			$table->string('Checkpoint_name')->Checkpoint_name();
+			$table->string('Checkpoint_Name')->Checkpoint_Name();
 			$table->string('Checkpoint_Latitude')->Checkpoint_Latitude();
 			$table->string('Checkpoint_Longtitude')->Checkpoint_Longtitude();
 			$table->string('Checkpoint_LatitudeDelta')->Checkpoint_LatitudeDelta();
@@ -25,6 +25,8 @@ class CreateCheckpointsTable extends Migration
 			$table->integer('Checkpoint_SpeacialScore')->Checkpoint_SpeacialScore();
 			$table->date('Checkpoint_StartDate')->Checkpoint_StartDate();
 			$table->date('Checkpoint_EndDate')->Checkpoint_EndDate();
+			$table->time('Checkpoint_StartTime')->Checkpoint_StratTime();
+			$table->time('Checkpoint_EndTime')->Checkpoint_EndTime();
 			$table->integer('Provience_ID')->Provience_ID();
 			$table->integer('Category_Checkpoint_ID')->Category_Checkpoint_ID();
 

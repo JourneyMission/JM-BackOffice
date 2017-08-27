@@ -124,7 +124,10 @@ class BadgesController extends Controller
      */
     public function edit($id)
     {
-
+        
+        if ($id == 0 ) {
+            return view('badges.edit');
+        }
         $badge = $this->repository->find($id);
 
         return view('badges.edit', compact('badge'));

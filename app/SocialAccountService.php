@@ -22,8 +22,8 @@ class SocialAccountService
 
             $account = new Profile([
                 'Profile_ProviderID' => $providerUser->getId(),
-                'Profile_Name' => $providerUser->getEmail(),
-                'Profile_Email' => $providerUser->getName(),
+                'Profile_Email' => $providerUser->getEmail(),
+                'Profile_Name' => $providerUser->getName(),
                 'Profile_Role' => 0,
             ]);
 

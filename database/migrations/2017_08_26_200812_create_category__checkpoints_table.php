@@ -13,7 +13,7 @@ class CreateCategoryCheckpointsTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('category__checkpoints', function(Blueprint $table) {
+		Schema::create('category_checkpoints', function(Blueprint $table) {
             $table->increments('id');
 			$table->string('Category_Checkpoint_Name')->Category_Checkpoint_Name();
 
@@ -28,7 +28,7 @@ class CreateCategoryCheckpointsTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::drop('category__checkpoints');
+		Schema::drop('category_checkpoints');
 	}
 
 }

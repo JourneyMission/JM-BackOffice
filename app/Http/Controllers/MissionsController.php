@@ -124,7 +124,10 @@ class MissionsController extends Controller
      */
     public function edit($id)
     {
-
+        if ($id == 0) {
+            return view('missions.edit');
+        }
+        
         $mission = $this->repository->find($id);
 
         return view('missions.edit', compact('mission'));

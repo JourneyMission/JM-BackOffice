@@ -123,11 +123,12 @@ class CategoryCheckpointsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {
+    {   
 
+        $categoryCheckpoints = $this->repository->all();
         $categoryCheckpoint = $this->repository->find($id);
 
-        return view('categoryCheckpoints.edit', compact('categoryCheckpoint'));
+        return view('categoryCheckpoints.index', compact('categoryCheckpoint','categoryCheckpoints'));
     }
 
 
@@ -157,8 +158,10 @@ class CategoryCheckpointsController extends Controller
 
                 return response()->json($response);
             }
+            $categoryCheckpoints = $this->repository->all();
+            
+            return view('categoryCheckpoints.index', compact('categoryCheckpoints'))->with('message', $response['message']);
 
-            return redirect()->back()->with('message', $response['message']);
         } catch (ValidatorException $e) {
 
             if ($request->wantsJson()) {
@@ -193,6 +196,6 @@ class CategoryCheckpointsController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('message', 'CategoryCheckpoint deleted.');
+        return view('categoryCheckpoints.index')->with('message', 'CategoryCheckpoint deleted.');
     }
 }

@@ -8,20 +8,10 @@
         <!-- Breadcrumbs -->
         <ol class="breadcrumb">
           <li class="breadcrumb-item">
-            <a href="/home">Dashboard</a>&nbsp;
+            <a href="home">Dashboard</a>&nbsp;
           </li>
-          <li class="breadcrumb-item"> Manage Checkpoint</li>
+          <li class="Profiles"> / Manage Profiles</li>
         </ol>
-        @if ($errors->any())
-            <div class="alert alert-danger alert-dismissable">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
         @if (isset($message))
             <div class="alert alert-success alert-dismissable">
               <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -35,63 +25,70 @@
             <div class="float-left">
               <h4>
               <i class="fa fa-table"></i>
-              Checkpoint
+              User Profiles
               </h4>
             </div>
-            </span>
+<!--
             <div class="float-right">
-                <a href="/Checkpoints/0/edit">
-                <button type="button" class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i> New</button>
-                </a>
+              <a href="Profiles/create">
+              <button type="button" class="btn btn-primary"> <i class="fa fa-plus" aria-hidden="true"></i> New Checkpoint</button>
+              </a>
             </div>
-
+-->
             </span>
-          </div>
           </div>
           <div class="card-body">
             <div class="table-responsive">
-              @if(isset($checkpoints))
+              @if(isset($profiles))
               <table class="table table-bordered" width="100%" id="dataTable" cellspacing="0">
                 <thead>
                   <tr>
                     <th>ID</th>
                     <th>Name</th>
-                    <th>Provience</th>
-                    <th>Category</th>
-                    <th>Score</th>
-                    <th>Last Update</th>
+                    <th>Email</th>
+                    <th>Team</th>
+                    <th>Role</th>
+                    <th>Last Login</th>
                     <th>Manage</th>
                   </tr>
                 </thead>
                   
-                 <?php 
-                    $checkpoints= json_decode($checkpoints);
+                  <?php 
+                    $profiles= json_decode($profiles);
                   ?>
                 <tbody>
-                @foreach ($checkpoints as $checkpoint)
+                @foreach ($profiles as $profile)
                   <tr>
-                    <td> {{$checkpoint->id }}</td>
-                    <td>{{ $checkpoint->Checkpoint_Name }}</td>
-                    <td>{{ $checkpoint->provience->Provience_Name }}</td>
-                    <td>{{ $checkpoint->category_checkpoint->Category_Checkpoint_Name }}</td>
-                    <td>{{ $checkpoint->Checkpoint_Score }}</td>
-                    <td>{{ $checkpoint->updated_at }}</td>
+                    <td> {{ $profile->id }}</td>
+                    <td>{{ $profile->Profile_Name }}</td>
+                    <td>{{ $profile->Profile_Email }}</td>
+                    @if ($profile->Profile_Team == NULL)
+                        <td>No Data !</td>
+                    @elseif ($profile->Profile_Team = 1)
+                        <td><font color="red">ทีมสีแดง</font></td>
+                    @else
+                        <td><font color="blue">ทีมสีเขียว</font></td>
+                    @endif
+                    @if ($profile->Profile_Role == 1)
+                        <td>Admin</td>
+                    @endif
+                    <td>{{ $profile->updated_at }}</td>
                     <td>
-                      <a href="/Checkpoints/{{ $checkpoint->id }}/edit">
-                      <span class="badge badge-info">
-                        <i class="fa fa-search" aria-hidden="true"></i> view</a>
+                      <a href="/Profiles/{{ $profile->id }}">
+                      <span class="badge badge-success"> 
+                        <i class="fa fa-search" aria-hidden="true"></i> View</a>
                       </span>
-                      <a href="/Checkpoints/{{ $checkpoint->id }}/edit">
+                      <a href="/Profiles/{{ $profile->id }}/edit">
                       <span class="badge badge-warning">
                         <i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
                       </span>
-                      <a href="#" onclick="if(confirm('ยืนยันการลบข้อมูล {{ $checkpoint->Checkpoint_Name }} ') == true){
-                            document.getElementById('Delete-form{{$checkpoint->id}}').submit();
+                      <a href="#" onclick="if(confirm('ยืนยันการลบข้อมูล {{ $profile->Profile_Name }} ') == true){
+                            document.getElementById('Delete-form').submit();
                         }">
                      <span class="badge badge-danger"> 
                         <i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
                       </span>
-                      {!! Form::open(['method' => 'DELETE', 'action' => ['CheckpointsController@destroy','id'=>$checkpoint->id],'style' => 'display: none;','id' => 'Delete-form'.$checkpoint->id]) !!}
+                      {!! Form::open(['method' => 'DELETE', 'action' => ['ProfilesController@destroy',$profile->id],'style' => 'display: none;','id' => 'Delete-form']) !!}
                       {!! Form::close() !!}
                       
                     </td>
@@ -105,7 +102,6 @@
             </div>
           </div>
           <div class="card-footer small text-muted">
-            
           </div>
         </div>
 

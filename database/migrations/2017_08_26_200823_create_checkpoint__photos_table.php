@@ -13,7 +13,7 @@ class CreateCheckpointPhotosTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('checkpoint__photos', function(Blueprint $table) {
+		Schema::create('checkpoint_photos', function(Blueprint $table) {
             $table->increments('id');
 			$table->string('Checkpoint_Photo')->Checkpoint_Photo();
 			$table->integer('Checkpoint_ID')->Checkpoint_ID();
@@ -29,7 +29,7 @@ class CreateCheckpointPhotosTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::drop('checkpoint__photos');
+		Schema::drop('checkpoint_photos');
 	}
 
 }

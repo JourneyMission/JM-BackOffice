@@ -13,7 +13,7 @@ class CreateCategoryMissionsTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('category__missions', function(Blueprint $table) {
+		Schema::create('category_missions', function(Blueprint $table) {
             $table->increments('id');
 			$table->string('Category_Mission_Name')->Category_Mission_Name();
 
@@ -28,7 +28,7 @@ class CreateCategoryMissionsTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::drop('category__missions');
+		Schema::drop('category_missions');
 	}
 
 }

@@ -125,9 +125,10 @@ class CategoryMissionsController extends Controller
     public function edit($id)
     {
 
+        $categoryMissions = $this->repository->all();
         $categoryMission = $this->repository->find($id);
 
-        return view('categoryMissions.edit', compact('categoryMission'));
+        return view('categoryMissions.index', compact('categoryMissions','categoryMission'));
     }
 
 
@@ -168,8 +169,8 @@ class CategoryMissionsController extends Controller
                     'message' => $e->getMessageBag()
                 ]);
             }
-
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
+            $categoryMissions = $this->repository->all();
+            return view('categoryMissions.index', compact('categoryMissions'))->withErrors($e->getMessageBag())->withInput();
         }
     }
 
@@ -193,6 +194,6 @@ class CategoryMissionsController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('message', 'CategoryMission deleted.');
+        return view('categoryMissions.index')->with('message', 'CategoryMission deleted.');
     }
 }

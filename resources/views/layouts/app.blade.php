@@ -32,38 +32,54 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+        <ul class="navbar-nav navbar-sidenav" id="AdminMenu">
     
-            <li class="nav-item active" data-toggle="tooltip" data-placement="right" title="Dashboard">
-              <a class="nav-link" href="home">
+            <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+              <a class="nav-link" href="/home">
                   <i ><img src = "{{ asset('img/icon/dashboard.png') }}"></i>
                   <span class="nav-link-text">
                     Dashboard </span>
                 </a>
             </li>
             <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Checkpoint">
-              <a class="nav-link" href="Checkpoints">
-                  <i ><img src = "{{ asset('img/icon/map-pin-marked.png') }}"></i>
+              <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseCheckpoint" data-parent="#AdminMenu">
+                <i><img src = "{{ asset('img/icon/map-pin-marked.png') }}"></i>
                   <span class="nav-link-text">
                     Checkpoint </span>
-                </a>
-            </li>
-            <li class="nav-item " data-toggle="tooltip" data-placement="right" title="Mission">
-              <a class="nav-link" href="Missions">
-                  <i ><img src = "{{ asset('img/icon/mission.png') }}"></i>
+            </a>
+            <ul class="sidenav-second-level collapse" id="collapseCheckpoint">
+              <li>
+                <a href="/CategoryCheckpoints">Checkpoint Category</a>
+              </li>
+              <li>
+                <a href="/Checkpoints">Checkpoint</a>
+              </li>
+            </ul>
+          </li>
+         <li class="nav-item " data-toggle="tooltip" data-placement="right" title="Mission">
+            <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMission" data-parent="#AdminMenu">
+               <i ><img src = "{{ asset('img/icon/mission.png') }}"></i>
                   <span class="nav-link-text">
                     Mission </span>
-                </a>
-            </li>
+            </a>
+            <ul class="sidenav-second-level collapse" id="collapseMission">
+              <li>
+                <a href="/CategoryMissions">Mission Category</a>
+              </li>
+              <li>
+                <a href="/Missions">Mission</a>
+              </li>
+            </ul>
+          </li>
             <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Badge">
-              <a class="nav-link" href="Badges">
+              <a class="nav-link" href="/Badges">
                   <i><img src = "{{ asset('img/icon/star-button.png') }}"></i>
                   <span class="nav-link-text">
                     Badge </span>
                 </a>
             </li>
             <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Badge">
-              <a class="nav-link" href="Profiles">
+              <a class="nav-link" href="/Profiles">
                   <i class="fa fa-user" aria-hidden="true"></i>
                   <span class="nav-link-text">
                     User </span>
@@ -93,6 +109,7 @@
         </div>
       </div>
     </footer>
+    <canvas id="myPieChart" width="100%" height="100" style="display: none;"></canvas>
     <!-- Bootstrap core JavaScript -->
     <script src="{{ asset('js/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('js/popper/popper.min.js') }}"></script>

@@ -10,7 +10,7 @@
           <li class="breadcrumb-item">
             <a href="/home">Dashboard</a>&nbsp;
           </li>
-          <li class="breadcrumb-item"> Manage Checkpoint</li>
+          <li class="breadcrumb-item"> Manage Checkpoint Categories</li>
         </ol>
         @if ($errors->any())
             <div class="alert alert-danger alert-dismissable">
@@ -35,63 +35,68 @@
             <div class="float-left">
               <h4>
               <i class="fa fa-table"></i>
-              Checkpoint
+              Checkpoint Categories
               </h4>
             </div>
-            </span>
+
             <div class="float-right">
-                <a href="/Checkpoints/0/edit">
-                <button type="button" class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i> New</button>
+              @if(isset($categoryCheckpoint))
+             
+             {!! Form::open(['method' => 'PATCH', 'action' => ['CategoryCheckpointsController@update','id'=>$categoryCheckpoint->id],'class'=>'form-inline' ]) !!}
+              
+                <label class="sr-only" for="CategoryCheckpointsInput">Category</label>
+                <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="CategoryCheckpointsInput" name="Category_Checkpoint_Name" placeholder="New Category.." value="{{$categoryCheckpoint->Category_Checkpoint_Name}}" autofocus required>
+                <button type="submit" class="btn btn-warning">Update</button>&nbsp;
+                <a href="/CategoryCheckpoints">
+                <button type="button" class="btn btn-danger">Cancel</button>
                 </a>
+              @else
+              {!! Form::open(['method' => 'POST', 'action' => ['CategoryCheckpointsController@store'],'class'=>'form-inline' ]) !!}
+               <label class="sr-only" for="CategoryCheckpointsInput">Category</label>
+                <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="CategoryCheckpointsInput" name="Category_Checkpoint_Name" placeholder="New Category.." required>
+                <button type="submit" class="btn btn-primary">New</button>
+
+              @endif
+              {!! Form::close() !!}
             </div>
 
             </span>
           </div>
-          </div>
           <div class="card-body">
             <div class="table-responsive">
-              @if(isset($checkpoints))
+              @if(isset($categoryCheckpoints))
               <table class="table table-bordered" width="100%" id="dataTable" cellspacing="0">
                 <thead>
                   <tr>
                     <th>ID</th>
                     <th>Name</th>
-                    <th>Provience</th>
-                    <th>Category</th>
-                    <th>Score</th>
                     <th>Last Update</th>
                     <th>Manage</th>
                   </tr>
                 </thead>
                   
                  <?php 
-                    $checkpoints= json_decode($checkpoints);
+                    $categoryCheckpoints= json_decode($categoryCheckpoints);
+                    //dd($categoryCheckpoints);
                   ?>
                 <tbody>
-                @foreach ($checkpoints as $checkpoint)
+                @foreach ($categoryCheckpoints as $categoryCheckpoint)
                   <tr>
-                    <td> {{$checkpoint->id }}</td>
-                    <td>{{ $checkpoint->Checkpoint_Name }}</td>
-                    <td>{{ $checkpoint->provience->Provience_Name }}</td>
-                    <td>{{ $checkpoint->category_checkpoint->Category_Checkpoint_Name }}</td>
-                    <td>{{ $checkpoint->Checkpoint_Score }}</td>
-                    <td>{{ $checkpoint->updated_at }}</td>
+                    <td> {{ $categoryCheckpoint->id }}</td>
+                    <td>{{ $categoryCheckpoint->Category_Checkpoint_Name }}</td>
+                    <td>{{ $categoryCheckpoint->updated_at }}</td>
                     <td>
-                      <a href="/Checkpoints/{{ $checkpoint->id }}/edit">
-                      <span class="badge badge-info">
-                        <i class="fa fa-search" aria-hidden="true"></i> view</a>
-                      </span>
-                      <a href="/Checkpoints/{{ $checkpoint->id }}/edit">
+                      <a href="/CategoryCheckpoints/{{ $categoryCheckpoint->id }}/edit">
                       <span class="badge badge-warning">
                         <i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
                       </span>
-                      <a href="#" onclick="if(confirm('ยืนยันการลบข้อมูล {{ $checkpoint->Checkpoint_Name }} ') == true){
-                            document.getElementById('Delete-form{{$checkpoint->id}}').submit();
+                      <a href="#" onclick="if(confirm('ยืนยันการลบข้อมูล {{ $categoryCheckpoint->Category_Checkpoint_Name }} ') == true){
+                            document.getElementById('Delete-form{{$categoryCheckpoint->id}}').submit();
                         }">
                      <span class="badge badge-danger"> 
                         <i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
                       </span>
-                      {!! Form::open(['method' => 'DELETE', 'action' => ['CheckpointsController@destroy','id'=>$checkpoint->id],'style' => 'display: none;','id' => 'Delete-form'.$checkpoint->id]) !!}
+                      {!! Form::open(['method' => 'DELETE', 'action' => ['CategoryCheckpointsController@destroy','id'=>$categoryCheckpoint->id],'style' => 'display: none;','id' => 'Delete-form'.$categoryCheckpoint->id]) !!}
                       {!! Form::close() !!}
                       
                     </td>

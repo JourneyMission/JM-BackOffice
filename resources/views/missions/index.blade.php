@@ -10,7 +10,7 @@
           <li class="breadcrumb-item">
             <a href="/home">Dashboard</a>&nbsp;
           </li>
-          <li class="breadcrumb-item"> Manage Checkpoint</li>
+          <li class="breadcrumb-item"> Manage Mission</li>
         </ol>
         @if ($errors->any())
             <div class="alert alert-danger alert-dismissable">
@@ -35,12 +35,12 @@
             <div class="float-left">
               <h4>
               <i class="fa fa-table"></i>
-              Checkpoint
+              Mission
               </h4>
             </div>
             </span>
             <div class="float-right">
-                <a href="/Checkpoints/0/edit">
+                <a href="/Missions/0/edit">
                 <button type="button" class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i> New</button>
                 </a>
             </div>
@@ -50,7 +50,7 @@
           </div>
           <div class="card-body">
             <div class="table-responsive">
-              @if(isset($checkpoints))
+              @if(isset($missions))
               <table class="table table-bordered" width="100%" id="dataTable" cellspacing="0">
                 <thead>
                   <tr>
@@ -65,33 +65,33 @@
                 </thead>
                   
                  <?php 
-                    $checkpoints= json_decode($checkpoints);
+                    $missions= json_decode($missions);
                   ?>
                 <tbody>
-                @foreach ($checkpoints as $checkpoint)
+                @foreach ($missions as $mission)
                   <tr>
-                    <td> {{$checkpoint->id }}</td>
-                    <td>{{ $checkpoint->Checkpoint_Name }}</td>
-                    <td>{{ $checkpoint->provience->Provience_Name }}</td>
-                    <td>{{ $checkpoint->category_checkpoint->Category_Checkpoint_Name }}</td>
-                    <td>{{ $checkpoint->Checkpoint_Score }}</td>
-                    <td>{{ $checkpoint->updated_at }}</td>
+                    <td> {{$mission->id }}</td>
+                    <td>{{ $mission->Mission_Name }}</td>
+                    <td>{{ $mission->provience->Provience_Name }}</td>
+                    <td>{{ $mission->category_mission->Category_Mission_Name }}</td>
+                    <td>{{ $mission->Mission_Score }}</td>
+                    <td>{{ $mission->updated_at }}</td>
                     <td>
-                      <a href="/Checkpoints/{{ $checkpoint->id }}/edit">
+                      <a href="/Missions/{{ $mission->id }}/edit">
                       <span class="badge badge-info">
                         <i class="fa fa-search" aria-hidden="true"></i> view</a>
                       </span>
-                      <a href="/Checkpoints/{{ $checkpoint->id }}/edit">
+                      <a href="/Missions/{{ $mission->id }}/edit">
                       <span class="badge badge-warning">
                         <i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
                       </span>
-                      <a href="#" onclick="if(confirm('ยืนยันการลบข้อมูล {{ $checkpoint->Checkpoint_Name }} ') == true){
-                            document.getElementById('Delete-form{{$checkpoint->id}}').submit();
+                      <a href="#" onclick="if(confirm('ยืนยันการลบข้อมูล {{ $mission->Mission_Name }} ') == true){
+                            document.getElementById('Delete-form{{$mission->id}}').submit();
                         }">
                      <span class="badge badge-danger"> 
                         <i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
                       </span>
-                      {!! Form::open(['method' => 'DELETE', 'action' => ['CheckpointsController@destroy','id'=>$checkpoint->id],'style' => 'display: none;','id' => 'Delete-form'.$checkpoint->id]) !!}
+                      {!! Form::open(['method' => 'DELETE', 'action' => ['MissionsController@destroy','id'=>$mission->id],'style' => 'display: none;','id' => 'Delete-form'.$mission->id]) !!}
                       {!! Form::close() !!}
                       
                     </td>

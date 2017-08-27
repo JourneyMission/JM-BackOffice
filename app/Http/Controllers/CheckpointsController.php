@@ -10,6 +10,8 @@ use Prettus\Validator\Exceptions\ValidatorException;
 use App\Http\Requests\CheckpointCreateRequest;
 use App\Http\Requests\CheckpointUpdateRequest;
 use App\Repositories\CheckpointRepository;
+use App\Repositories\CategoryCheckpointRepository;
+use App\Repositories\ProvienceRepository;
 use App\Validators\CheckpointValidator;
 
 
@@ -21,15 +23,21 @@ class CheckpointsController extends Controller
      */
     protected $repository;
 
+    protected $provience;
+
+    protected $categoryCheckpoint;
+
     /**
      * @var CheckpointValidator
      */
     protected $validator;
 
-    public function __construct(CheckpointRepository $repository, CheckpointValidator $validator)
+    public function __construct(CheckpointRepository $repository,ProvienceRepository $provience,CategoryCheckpointRepository $categoryCheckpoint, CheckpointValidator $validator)
     {
         $this->repository = $repository;
         $this->validator  = $validator;
+        $this->provience  = $provience;
+        $this->categoryCheckpoint  = $categoryCheckpoint;
     }
 
 
@@ -41,7 +49,7 @@ class CheckpointsController extends Controller
     public function index()
     {
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        $checkpoints = $this->repository->all();
+        $checkpoints = $this->repository->with('categoryCheckpoint')->with('provience')->all();
 
         if (request()->wantsJson()) {
 
@@ -102,7 +110,7 @@ class CheckpointsController extends Controller
      */
     public function show($id)
     {
-        $checkpoint = $this->repository->find($id);
+        $checkpoint = $this->repository->with('categoryCheckpoint')->with('provience')->find($id);
 
         if (request()->wantsJson()) {
 
@@ -124,10 +132,13 @@ class CheckpointsController extends Controller
      */
     public function edit($id)
     {
-
-        $checkpoint = $this->repository->find($id);
-
-        return view('checkpoints.edit', compact('checkpoint'));
+        $categoryCheckpoint = $this->categoryCheckpoint->all();
+        $provience = $this->provience->all();
+        
+        if ($id != 0 ) {
+            $checkpoint = $this->repository->with('categoryCheckpoint')->with('provience')->find($id);
+        }
+        return view('checkpoints.edit', compact('checkpoint','categoryCheckpoint','provience'));
     }
 
 
