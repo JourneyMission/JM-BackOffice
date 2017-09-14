@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+use Auth;
 class CheckpointCreateRequest extends FormRequest
 {
     /**
@@ -13,7 +13,7 @@ class CheckpointCreateRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**

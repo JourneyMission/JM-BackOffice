@@ -17,8 +17,6 @@ class CreateProviencesTable extends Migration
             $table->increments('id');
 			$table->string('Provience_Name')->Provience_Name();
 			$table->string('Provience_CodeName')->Provience_CodeName();
-
-            $table->timestamps();
 		});
 	}
 

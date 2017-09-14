@@ -10,6 +10,9 @@ use Prettus\Validator\Exceptions\ValidatorException;
 use App\Http\Requests\MissionCreateRequest;
 use App\Http\Requests\MissionUpdateRequest;
 use App\Repositories\MissionRepository;
+use App\Repositories\CategoryMissionRepository;
+use App\Repositories\ProvienceRepository;
+use App\Repositories\RegionRepository;
 use App\Validators\MissionValidator;
 
 
@@ -20,15 +23,21 @@ class MissionsController extends Controller
      * @var MissionRepository
      */
     protected $repository;
+    protected $region;
+    protected $provience;
+    protected $categoryMission;
 
     /**
      * @var MissionValidator
      */
     protected $validator;
 
-    public function __construct(MissionRepository $repository, MissionValidator $validator)
+    public function __construct(MissionRepository $repository,CategoryMissionRepository $categoryMission,RegionRepository $region,ProvienceRepository $provience, MissionValidator $validator)
     {
         $this->repository = $repository;
+        $this->region = $region;
+        $this->provience = $provience;
+        $this->categoryMission = $categoryMission;
         $this->validator  = $validator;
     }
 
@@ -41,7 +50,7 @@ class MissionsController extends Controller
     public function index()
     {
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        $missions = $this->repository->all();
+        $missions = $this->repository->with(['categoryMission','MissionSource','MissionDestination','Region'])->all();
 
         if (request()->wantsJson()) {
 
@@ -49,8 +58,35 @@ class MissionsController extends Controller
                 'data' => $missions,
             ]);
         }
-
         return view('missions.index', compact('missions'));
+    }
+
+    public function uploadIcon($request,$id){
+        
+        if($request->hasFile('Mission_Icon')){
+                
+                $extension = $request->Mission_Icon->extension();
+                $filename = $id. "-" .substr( md5( $request->Mission_Name . '-' . time() ), 0, 15) . '.'.$extension; 
+                $path = 'public/mission/icon';
+                $request->file('Mission_Icon')->storeAs(
+                    $path, $filename
+                );
+                $mission = $this->repository->update(['Mission_Icon' => $filename], $id);
+        }
+    }
+
+    public function uploadPhoto($request,$id){
+        if($request->hasFile('Mission_Photo')){
+                
+                $extension = $request->Mission_Photo->extension();
+                $filename = $id. "-" . substr( md5( $request->Mission_Name . '-' . time() ), 0, 15) . '.'.$extension; 
+                $path = 'public/mission/photo';
+                $request->file('Mission_Photo')->storeAs(
+                    $path, $filename
+                );
+                $request->merge(['Mission_Photo' => $filename]);
+                $mission = $this->repository->update(['Mission_Photo' => $filename], $id);
+        }
     }
 
     /**
@@ -66,8 +102,20 @@ class MissionsController extends Controller
         try {
 
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
+            if ($request->Mission_Status == 'on') {
+                $request->merge(['Mission_Status' => 1]);
+            }else{
+                $request->Mission_Status = 0;
+            }
 
             $mission = $this->repository->create($request->all());
+
+            if($request->hasFile('Mission_Icon')){
+                MissionsController::uploadIcon($request,$mission->id);
+            }
+            if($request->hasFile('Mission_Photo')){
+                MissionsController::uploadPhoto($request,$mission->id);
+            }
 
             $response = [
                 'message' => 'Mission created.',
@@ -79,7 +127,7 @@ class MissionsController extends Controller
                 return response()->json($response);
             }
 
-            return redirect()->back()->with('message', $response['message']);
+            return redirect('/Missions')->with('message', $response['message']);
         } catch (ValidatorException $e) {
             if ($request->wantsJson()) {
                 return response()->json([
@@ -102,16 +150,16 @@ class MissionsController extends Controller
      */
     public function show($id)
     {
-        $mission = $this->repository->find($id);
+        
 
         if (request()->wantsJson()) {
-
+            $mission = $this->repository->find($id);
             return response()->json([
                 'data' => $mission,
             ]);
         }
 
-        return view('missions.show', compact('mission'));
+        return redirect('/Missions');
     }
 
 
@@ -124,13 +172,15 @@ class MissionsController extends Controller
      */
     public function edit($id)
     {
-        if ($id == 0) {
-            return view('missions.edit');
-        }
-        
-        $mission = $this->repository->find($id);
+        $categoryMission = $this->categoryMission->all();
+        $proviences = $this->provience->all();
+        $regions = $this->region->all();
 
-        return view('missions.edit', compact('mission'));
+        if ($id != 0) {
+            $mission = $this->repository->with(['categoryMission','MissionSource','MissionDestination','Region'])->find($id);
+        }
+
+        return view('missions.edit', compact('mission','proviences','categoryMission','regions'));
     }
 
 
@@ -148,9 +198,18 @@ class MissionsController extends Controller
         try {
 
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
-
+            if ($request->Mission_Status == 'on') {
+                $request->merge(['Mission_Status' => 1]);
+            }else{
+                $request->Mission_Status = 0;
+            }
             $mission = $this->repository->update($request->all(), $id);
-
+            if($request->hasFile('Mission_Icon')){
+                MissionsController::uploadIcon($request,$id);
+            }
+            if($request->hasFile('Mission_Photo')){
+                MissionsController::uploadPhoto($request,$id);
+            }
             $response = [
                 'message' => 'Mission updated.',
                 'data'    => $mission->toArray(),
@@ -161,7 +220,7 @@ class MissionsController extends Controller
                 return response()->json($response);
             }
 
-            return redirect()->back()->with('message', $response['message']);
+            return redirect('/Missions')->with('message', $response['message']);
         } catch (ValidatorException $e) {
 
             if ($request->wantsJson()) {

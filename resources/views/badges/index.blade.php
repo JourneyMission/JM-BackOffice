@@ -6,11 +6,11 @@
       <div class="container-fluid">
 
         <!-- Breadcrumbs -->
-        <ol class="breadcrumb">
+    <ol class="breadcrumb">
           <li class="breadcrumb-item">
             <a href="/home">Dashboard</a>&nbsp;
           </li>
-          <li class="breadcrumb-item"> Manage Badge</li>
+          <li class="breadcrumb-item">Badge Management</li>
         </ol>
         @if ($errors->any())
             <div class="alert alert-danger alert-dismissable">
@@ -22,10 +22,10 @@
                 </ul>
             </div>
         @endif
-        @if (isset($message))
+        @if (session()->has('message'))
             <div class="alert alert-success alert-dismissable">
               <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <strong>Success!</strong> {{$message}}
+            <strong>Success!</strong>  {{session('message')}}
             </div>
         @endif
         <!-- Example Tables Card -->
@@ -56,9 +56,8 @@
                   <tr>
                     <th>ID</th>
                     <th>Name</th>
-                    <th>Provience</th>
-                    <th>Category</th>
-                    <th>Score</th>
+                    <th>Description</th>
+                    <th>Status</th>
                     <th>Last Update</th>
                     <th>Manage</th>
                   </tr>
@@ -69,12 +68,12 @@
                   ?>
                 <tbody>
                 @foreach ($badges as $badge)
+                
                   <tr>
                     <td> {{$badge->id }}</td>
                     <td>{{ $badge->Badge_Name }}</td>
-                    <td>{{ $badge->provience->Provience_Name }}</td>
-                    <td>{{ $badge->category_badge->Category_Badge_Name }}</td>
-                    <td>{{ $badge->Badge_Score }}</td>
+                    <td>{{ $badge->Badge_Description }}</td>
+                    <td>{{ $badge->Badge_Status }}</td>
                     <td>{{ $badge->updated_at }}</td>
                     <td>
                       <a href="/Badges/{{ $badge->id }}/edit">

@@ -348,13 +348,60 @@ footer.sticky-footer {
 
 @media (min-width: 992px) {
   body.sidenav-toggled footer.sticky-footer {
-    width: calc(100% - 55px); } }
-
-#success_message{ display: none;}
-
-.container{
-  margin-top:0px;
+    width: calc(100% - 55px);
+  }
 }
+
+.breadcrumb-info {
+  padding: .25rem 1rem;
+  margin-bottom: 1rem;
+  list-style: none;
+  background-color: #59A1E7;
+  border-radius: .25rem
+}
+
+.breadcrumb-info::after {
+  display: block;
+  clear: both;
+  content: ""
+}
+
+.breadcrumb-text {
+  color: #ffffff;
+}
+
+.div1 {
+  float: left;
+  text-align: right;
+}
+
+.div2 {
+  float: left;
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+.div3 {
+  float: left;
+  text-align: center;
+ 
+}
+
+.breadcrumb-save {
+  padding: .5rem;
+  margin-bottom: 1rem;
+  list-style: none;
+  background-color: #ffffff;
+  border-radius: .25rem;
+  text-align: right;
+}
+
+.breadcrumb-save::after {
+  display: block;
+  clear: both;
+  content: ""
+}
+
 .image-preview-input {
   position: relative;
 overflow: hidden;
@@ -376,5 +423,102 @@ filter: alpha(opacity=0);
 }
 .image-preview-input-title {
   margin-left:2px;
+}
+
+.icon-preview-input {
+  position: relative;
+overflow: hidden;
+margin: 0px;    
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;    
+}
+
+.icon-preview-input input[type=file] {
+position: absolute;
+top: 0;
+right: 0;
+margin: 0;
+padding: 0;
+font-size: 20px;
+cursor: pointer;
+opacity: 0;
+filter: alpha(opacity=0);
+}
+.icon-preview-input-title {
+  margin-left:2px;
+}
+
+.entry:not(:first-of-type)
+{
+    margin-top: 10px;
+}
+
+.fa
+{
+    font-size: 12px;
+}
+
+.form{
+  display: block;
+
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }
 

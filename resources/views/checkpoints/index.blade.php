@@ -10,7 +10,7 @@
           <li class="breadcrumb-item">
             <a href="/home">Dashboard</a>&nbsp;
           </li>
-          <li class="breadcrumb-item"> Manage Checkpoint</li>
+          <li class="breadcrumb-item">Checkpoint Management</li>
         </ol>
         @if ($errors->any())
             <div class="alert alert-danger alert-dismissable">
@@ -22,10 +22,10 @@
                 </ul>
             </div>
         @endif
-        @if (isset($message))
+        @if (session()->has('message'))
             <div class="alert alert-success alert-dismissable">
               <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <strong>Success!</strong> {{$message}}
+            <strong>Success!</strong>  {{session('message')}}
             </div>
         @endif
         <!-- Example Tables Card -->
@@ -33,10 +33,7 @@
           <div class="card-header">
             <span class="align-middle">
             <div class="float-left">
-              <h4>
-              <i class="fa fa-table"></i>
-              Checkpoint
-              </h4>
+            <p class="h4"><i class="fa fa-dot-circle-o" ></i> Checkpoint Management</p>
             </div>
             </span>
             <div class="float-right">
@@ -64,7 +61,8 @@
                   </tr>
                 </thead>
                   
-                 <?php 
+                 <?php                     
+
                     $checkpoints= json_decode($checkpoints);
                   ?>
                 <tbody>
@@ -72,19 +70,28 @@
                   <tr>
                     <td> {{$checkpoint->id }}</td>
                     <td>{{ $checkpoint->Checkpoint_Name }}</td>
-                    <td>{{ $checkpoint->provience->Provience_Name }}</td>
-                    <td>{{ $checkpoint->category_checkpoint->Category_Checkpoint_Name }}</td>
+                    <td>
+                    @if(isset($checkpoint->provience->Provience_Name))
+                      {{ $checkpoint->provience->Provience_Name}}
+                    @else
+                      <span class="badge badge-danger">No Data!</span>
+                    @endif
+                    </td>
+                    </td>
+                    <td>
+                    @if(isset($checkpoint->category_checkpoint->Category_Checkpoint_Name))
+                      {{ $checkpoint->category_checkpoint->Category_Checkpoint_Name}}
+                    @else
+                      <span class="badge badge-danger">No Data!</span>
+                    @endif</td>
                     <td>{{ $checkpoint->Checkpoint_Score }}</td>
                     <td>{{ $checkpoint->updated_at }}</td>
                     <td>
                       <a href="/Checkpoints/{{ $checkpoint->id }}/edit">
-                      <span class="badge badge-info">
-                        <i class="fa fa-search" aria-hidden="true"></i> view</a>
-                      </span>
-                      <a href="/Checkpoints/{{ $checkpoint->id }}/edit">
                       <span class="badge badge-warning">
                         <i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
                       </span>
+                      </a>
                       <a href="#" onclick="if(confirm('ยืนยันการลบข้อมูล {{ $checkpoint->Checkpoint_Name }} ') == true){
                             document.getElementById('Delete-form{{$checkpoint->id}}').submit();
                         }">
@@ -93,7 +100,7 @@
                       </span>
                       {!! Form::open(['method' => 'DELETE', 'action' => ['CheckpointsController@destroy','id'=>$checkpoint->id],'style' => 'display: none;','id' => 'Delete-form'.$checkpoint->id]) !!}
                       {!! Form::close() !!}
-                      
+                      </a>
                     </td>
                   </tr>
                   @endforeach

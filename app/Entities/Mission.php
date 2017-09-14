@@ -24,4 +24,21 @@ class Mission extends Model implements Transformable
 		'Mission_Status',
 	];
 
+
+    public function Region() {
+        return $this->belongsTo('App\Entities\Region','Region_ID','id');
+    }
+
+    public function MissionSource() {
+        return $this->belongsTo('App\Entities\Provience','Mission_Source','id');
+    }
+
+    public function MissionDestination() {
+        return $this->belongsTo('App\Entities\Provience','Mission_Destination','id');
+    }
+
+    public function CategoryMission() {
+        return $this->belongsTo('App\Entities\CategoryMission','Category_Mission_ID','id');
+    }
+
 }

@@ -16,8 +16,8 @@ class CreateCategoryMissionsTable extends Migration
 		Schema::create('category_missions', function(Blueprint $table) {
             $table->increments('id');
 			$table->string('Category_Mission_Name')->Category_Mission_Name();
-
-            $table->timestamps();
+			$table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+			$table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
 		});
 	}
 

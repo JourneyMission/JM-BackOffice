@@ -18,8 +18,8 @@ class CreateJoinMissionsTable extends Migration
 			$table->integer('Mission_ID')->Mission_ID();
 			$table->integer('Profile_ID')->Profile_ID();
 			$table->integer('Mission_Status')->Mission_Status();
-
-            $table->timestamps();
+$table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+$table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
 		});
 	}
 

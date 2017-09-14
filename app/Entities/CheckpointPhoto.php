@@ -15,7 +15,7 @@ class CheckpointPhoto extends Model implements Transformable
 		'Checkpoint_ID',
 	];
 
-	public function Checkkpoint() {
+	public function Checkpoint() {
         return $this->belongsTo('App\Entities\Chekpoint','Checkpoint_ID','id');
     }
 

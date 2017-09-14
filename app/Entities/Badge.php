@@ -32,4 +32,16 @@ class Badge extends Model implements Transformable
 		'Badge_Provience_Check',
 	];
 
+	public function CategoryCheckpoint() {
+        return $this->belongsTo('App\Entities\CategoryCheckpoint','Category_Checkpoint_ID','id');
+    }
+    public function Provience() {
+        return $this->belongsTo('App\Entities\Provience','Provience_ID','id');
+    }
+    public function CategoryMission() {
+        return $this->belongsTo('App\Entities\CategoryMission','Category_Mission_ID','id');
+    }
+    public function Region() {
+        return $this->belongsTo('App\Entities\Region','Region_ID','id');
+    }
 }

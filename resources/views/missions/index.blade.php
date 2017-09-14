@@ -6,11 +6,13 @@
       <div class="container-fluid">
 
         <!-- Breadcrumbs -->
-        <ol class="breadcrumb">
+    <ol class="breadcrumb">
           <li class="breadcrumb-item">
             <a href="/home">Dashboard</a>&nbsp;
           </li>
-          <li class="breadcrumb-item"> Manage Mission</li>
+          <li class="breadcrumb-item">
+            Mission Management
+          </li>
         </ol>
         @if ($errors->any())
             <div class="alert alert-danger alert-dismissable">
@@ -22,10 +24,10 @@
                 </ul>
             </div>
         @endif
-        @if (isset($message))
+        @if (session()->has('message'))
             <div class="alert alert-success alert-dismissable">
               <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <strong>Success!</strong> {{$message}}
+            <strong>Success!</strong>  {{session('message')}}
             </div>
         @endif
         <!-- Example Tables Card -->
@@ -56,7 +58,9 @@
                   <tr>
                     <th>ID</th>
                     <th>Name</th>
-                    <th>Provience</th>
+                    <th>Region</th>
+                    <th>Source</th>
+                    <th>Destination</th>
                     <th>Category</th>
                     <th>Score</th>
                     <th>Last Update</th>
@@ -72,25 +76,26 @@
                   <tr>
                     <td> {{$mission->id }}</td>
                     <td>{{ $mission->Mission_Name }}</td>
-                    <td>{{ $mission->provience->Provience_Name }}</td>
+                    <td>{{ $mission->region->Region_Name }}</td>
+                    <td>{{ $mission->mission_source->Provience_Name}}</td>
+                    <td>{{ $mission->mission_destination->Provience_Name}}</td>
                     <td>{{ $mission->category_mission->Category_Mission_Name }}</td>
                     <td>{{ $mission->Mission_Score }}</td>
                     <td>{{ $mission->updated_at }}</td>
                     <td>
-                      <a href="/Missions/{{ $mission->id }}/edit">
-                      <span class="badge badge-info">
-                        <i class="fa fa-search" aria-hidden="true"></i> view</a>
-                      </span>
+                      
                       <a href="/Missions/{{ $mission->id }}/edit">
                       <span class="badge badge-warning">
                         <i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
                       </span>
+                      </a>
                       <a href="#" onclick="if(confirm('ยืนยันการลบข้อมูล {{ $mission->Mission_Name }} ') == true){
                             document.getElementById('Delete-form{{$mission->id}}').submit();
                         }">
                      <span class="badge badge-danger"> 
                         <i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
                       </span>
+                      </a>
                       {!! Form::open(['method' => 'DELETE', 'action' => ['MissionsController@destroy','id'=>$mission->id],'style' => 'display: none;','id' => 'Delete-form'.$mission->id]) !!}
                       {!! Form::close() !!}
                       

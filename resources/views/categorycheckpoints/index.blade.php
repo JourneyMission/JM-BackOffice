@@ -22,10 +22,10 @@
                 </ul>
             </div>
         @endif
-        @if (isset($message))
+        @if (session()->has('message'))
             <div class="alert alert-success alert-dismissable">
               <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <strong>Success!</strong> {{$message}}
+            <strong>Success!</strong> {{session('message')}}
             </div>
         @endif
         <!-- Example Tables Card -->
@@ -34,14 +34,13 @@
             <span class="align-middle">
             <div class="float-left">
               <h4>
-              <i class="fa fa-table"></i>
+              <i class="fa fa-dot-circle-o"></i>
               Checkpoint Categories
               </h4>
             </div>
 
             <div class="float-right">
               @if(isset($categoryCheckpoint))
-             
              {!! Form::open(['method' => 'PATCH', 'action' => ['CategoryCheckpointsController@update','id'=>$categoryCheckpoint->id],'class'=>'form-inline' ]) !!}
               
                 <label class="sr-only" for="CategoryCheckpointsInput">Category</label>

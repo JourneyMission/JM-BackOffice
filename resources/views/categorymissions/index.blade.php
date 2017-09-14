@@ -22,10 +22,10 @@
                 </ul>
             </div>
         @endif
-        @if (isset($message))
+        @if (session()->has('message'))
             <div class="alert alert-success alert-dismissable">
               <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <strong>Success!</strong> {{$message}}
+            <strong>Success!</strong>  {{session('message')}}
             </div>
         @endif
         <!-- Example Tables Card -->

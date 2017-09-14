@@ -18,8 +18,8 @@ class CreateCheckinsTable extends Migration
 			$table->integer('Profile_ID')->Profile_ID();
 			$table->integer('Checkpoint_ID')->Checkpoint_ID();
 			$table->date('Checkin_Date')->Checkin_Date();
-
-            $table->timestamps();
+$table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+$table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
 		});
 	}
 

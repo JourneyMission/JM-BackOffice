@@ -11,7 +11,10 @@ use App\Http\Requests\BadgeCreateRequest;
 use App\Http\Requests\BadgeUpdateRequest;
 use App\Repositories\BadgeRepository;
 use App\Validators\BadgeValidator;
-
+use App\Repositories\CategoryCheckpointRepository;
+use App\Repositories\CategoryMissionRepository;
+use App\Repositories\ProvienceRepository;
+use App\Repositories\RegionRepository;
 
 class BadgesController extends Controller
 {
@@ -20,16 +23,24 @@ class BadgesController extends Controller
      * @var BadgeRepository
      */
     protected $repository;
+    protected $region;
+    protected $provience;
+    protected $categoryMission;
+    protected $categoryCheckpoint;
 
     /**
      * @var BadgeValidator
      */
     protected $validator;
 
-    public function __construct(BadgeRepository $repository, BadgeValidator $validator)
+    public function __construct(BadgeRepository $repository,CategoryMissionRepository $categoryMission,RegionRepository $region,ProvienceRepository $provience,CategoryCheckpointRepository $categoryCheckpoint, BadgeValidator $validator)
     {
         $this->repository = $repository;
         $this->validator  = $validator;
+        $this->categoryCheckpoint  = $categoryCheckpoint;
+        $this->region = $region;
+        $this->provience = $provience;
+        $this->categoryMission = $categoryMission;
     }
 
 
@@ -41,7 +52,11 @@ class BadgesController extends Controller
     public function index()
     {
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        $badges = $this->repository->all();
+        $badges = $this->repository->with(['categoryMission','Region','categoryCheckpoint','provience'])->all();
+        $categoryMission = $this->categoryMission->all();
+        $proviences = $this->provience->all();
+        $regions = $this->region->all();
+        $categoryCheckpoint = $this->categoryCheckpoint->all();
 
         if (request()->wantsJson()) {
 
@@ -50,7 +65,21 @@ class BadgesController extends Controller
             ]);
         }
 
-        return view('badges.index', compact('badges'));
+        return view('badges.index', compact('badges','proviences','categoryMission','regions','categoryCheckpoint'));
+    }
+
+    public function uploadPhoto($request,$id){
+        if($request->hasFile('Badge_Photo')){
+                
+                $extension = $request->Badge_Photo->extension();
+                $filename = $id. "-" . substr( md5( $request->Badge_Name . '-' . time() ), 0, 15) . '.'.$extension; 
+                $path = 'public/badge/';
+                $request->file('Badge_Photo')->storeAs(
+                    $path, $filename
+                );
+                $request->merge(['Badge_Photo' => $filename]);
+                $mission = $this->repository->update(['Badge_Photo' => $filename], $id);
+        }
     }
 
     /**
@@ -67,7 +96,18 @@ class BadgesController extends Controller
 
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
 
-            $badge = $this->repository->create($request->all());
+            if ($request->Badge_Status == 'on') {
+                $request->merge(['Badge_Status' => 1]);
+            }else{
+                $request->Badge_Status = 0;
+            }
+
+            if($request->hasFile('Badge_Photo')){
+                $badge = $this->repository->create($request->all());
+                BadgesController::uploadPhoto($request,$badge->id);
+            }else{
+            	return redirect()->back()->withErrors('Please Upload Photo')->withInput();
+            }
 
             $response = [
                 'message' => 'Badge created.',
@@ -79,7 +119,7 @@ class BadgesController extends Controller
                 return response()->json($response);
             }
 
-            return redirect()->back()->with('message', $response['message']);
+            return redirect('/Badges')->with('message', $response['message']);
         } catch (ValidatorException $e) {
             if ($request->wantsJson()) {
                 return response()->json([
@@ -102,16 +142,16 @@ class BadgesController extends Controller
      */
     public function show($id)
     {
-        $badge = $this->repository->find($id);
+        
 
         if (request()->wantsJson()) {
-
+        	$badge = $this->repository->find($id);
             return response()->json([
                 'data' => $badge,
             ]);
         }
 
-        return view('badges.show', compact('badge'));
+        return redirect('/Badges');
     }
 
 
@@ -123,14 +163,17 @@ class BadgesController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {
-        
-        if ($id == 0 ) {
-            return view('badges.edit');
-        }
-        $badge = $this->repository->find($id);
+    {	
+    	
+        $categoryMission = $this->categoryMission->all();
+        $proviences = $this->provience->all();
+        $regions = $this->region->all();
+        $categoryCheckpoint = $this->categoryCheckpoint->all();
 
-        return view('badges.edit', compact('badge'));
+        if ($id != 0 ) {
+        	$badge = $this->repository->with(['categoryMission','Region','categoryCheckpoint','provience'])->find($id);
+        }
+        return view('badges.edit', compact('badge','proviences','categoryMission','regions','categoryCheckpoint'));
     }
 
 
@@ -148,8 +191,17 @@ class BadgesController extends Controller
         try {
 
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
-
+            //dd($request->Badge_Status);
+            if ($request->Badge_Status == 'on') {
+                $request->merge(['Badge_Status' => 1]);
+            }else{
+                $request->Badge_Status = 0;
+            }
             $badge = $this->repository->update($request->all(), $id);
+            if($request->hasFile('Badge_Photo')){
+                
+                BadgesController::uploadPhoto($request,$id);
+            }
 
             $response = [
                 'message' => 'Badge updated.',
@@ -161,7 +213,7 @@ class BadgesController extends Controller
                 return response()->json($response);
             }
 
-            return redirect()->back()->with('message', $response['message']);
+            return redirect('/Badges')->with('message', $response['message']);
         } catch (ValidatorException $e) {
 
             if ($request->wantsJson()) {
@@ -172,7 +224,7 @@ class BadgesController extends Controller
                 ]);
             }
 
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
+            return redirect()->withErrors($e->getMessageBag())->withInput();
         }
     }
 
@@ -196,6 +248,6 @@ class BadgesController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('message', 'Badge deleted.');
+        return redirect('/Badges')->with('message', 'Badge deleted.');
     }
 }

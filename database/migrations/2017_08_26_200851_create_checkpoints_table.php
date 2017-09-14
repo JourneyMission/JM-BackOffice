@@ -22,15 +22,15 @@ class CreateCheckpointsTable extends Migration
 			$table->string('Checkpoint_LongtitudeDelta')->Checkpoint_LongtitudeDelta();
 			$table->text('Checkpoint_Description')->Checkpoint_Description();
 			$table->integer('Checkpoint_Score')->Checkpoint_Score();
-			$table->integer('Checkpoint_SpeacialScore')->Checkpoint_SpeacialScore();
-			$table->date('Checkpoint_StartDate')->Checkpoint_StartDate();
-			$table->date('Checkpoint_EndDate')->Checkpoint_EndDate();
-			$table->time('Checkpoint_StartTime')->Checkpoint_StratTime();
-			$table->time('Checkpoint_EndTime')->Checkpoint_EndTime();
+			$table->integer('Checkpoint_SpeacialScore')->Checkpoint_SpeacialScore()->nullable();
+			$table->date('Checkpoint_StartDate')->Checkpoint_StartDate()->nullable();
+			$table->date('Checkpoint_EndDate')->Checkpoint_EndDate()->nullable();
+			$table->time('Checkpoint_StartTime')->Checkpoint_StratTime()->nullable();
+			$table->time('Checkpoint_EndTime')->Checkpoint_EndTime()->nullable();
 			$table->integer('Provience_ID')->Provience_ID();
-			$table->integer('Category_Checkpoint_ID')->Category_Checkpoint_ID();
-
-            $table->timestamps();
+			$table->integer('Category_Checkpoint_ID')->Category_Checkpoint_ID()->nullable();
+			$table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+			$table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
 		});
 	}
 

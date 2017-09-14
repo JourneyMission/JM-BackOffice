@@ -79,7 +79,8 @@ class CategoryMissionsController extends Controller
                 return response()->json($response);
             }
 
-            return redirect()->back()->with('message', $response['message']);
+            return redirect('/CategoryMissions')->with('message', $response['message']);
+
         } catch (ValidatorException $e) {
             if ($request->wantsJson()) {
                 return response()->json([
@@ -102,16 +103,16 @@ class CategoryMissionsController extends Controller
      */
     public function show($id)
     {
-        $categoryMission = $this->repository->find($id);
+        
 
         if (request()->wantsJson()) {
-
+            $categoryMission = $this->repository->find($id);
             return response()->json([
                 'data' => $categoryMission,
             ]);
         }
 
-        return view('categoryMissions.show', compact('categoryMission'));
+        return redirect('/CategoryMissions');
     }
 
 
@@ -159,7 +160,7 @@ class CategoryMissionsController extends Controller
                 return response()->json($response);
             }
 
-            return redirect()->back()->with('message', $response['message']);
+            return redirect('/CategoryMissions')->with('message', $response['message']);
         } catch (ValidatorException $e) {
 
             if ($request->wantsJson()) {
@@ -169,8 +170,7 @@ class CategoryMissionsController extends Controller
                     'message' => $e->getMessageBag()
                 ]);
             }
-            $categoryMissions = $this->repository->all();
-            return view('categoryMissions.index', compact('categoryMissions'))->withErrors($e->getMessageBag())->withInput();
+            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
         }
     }
 
@@ -194,6 +194,6 @@ class CategoryMissionsController extends Controller
             ]);
         }
 
-        return view('categoryMissions.index')->with('message', 'CategoryMission deleted.');
+        return redirect('/CategoryMissions')->with('message', 'CategoryMission deleted.');
     }
 }

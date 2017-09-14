@@ -80,6 +80,7 @@ class CategoryCheckpointsController extends Controller
             }
 
             return redirect()->back()->with('message', $response['message']);
+
         } catch (ValidatorException $e) {
             if ($request->wantsJson()) {
                 return response()->json([
@@ -102,16 +103,15 @@ class CategoryCheckpointsController extends Controller
      */
     public function show($id)
     {
-        $categoryCheckpoint = $this->repository->find($id);
 
         if (request()->wantsJson()) {
-
+            $categoryCheckpoints = $this->repository->find($id);
             return response()->json([
                 'data' => $categoryCheckpoint,
             ]);
         }
 
-        return view('categoryCheckpoints.show', compact('categoryCheckpoint'));
+        return redirect('/CategoryCheckpoints');
     }
 
 
@@ -160,7 +160,7 @@ class CategoryCheckpointsController extends Controller
             }
             $categoryCheckpoints = $this->repository->all();
             
-            return view('categoryCheckpoints.index', compact('categoryCheckpoints'))->with('message', $response['message']);
+            return redirect('/CategoryCheckpoints')->with('message', $response['message']);
 
         } catch (ValidatorException $e) {
 
@@ -172,7 +172,7 @@ class CategoryCheckpointsController extends Controller
                 ]);
             }
 
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
+            return redirect('/CategoryCheckpoints')->withErrors($e->getMessageBag())->withInput();
         }
     }
 
@@ -196,6 +196,6 @@ class CategoryCheckpointsController extends Controller
             ]);
         }
 
-        return view('categoryCheckpoints.index')->with('message', 'CategoryCheckpoint deleted.');
+        return redirect('/CategoryCheckpoints')->with('message', 'CategoryCheckpoint deleted.');
     }
 }
