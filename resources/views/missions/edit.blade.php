@@ -62,7 +62,6 @@
                 @else
                 <input type="text" class="form-control icon-preview-filename" name="icon-preview" disabled="disabled">
                 @endif
-            <input type="text" class="form-control icon-preview-filename" name="icon-preview" disabled="disabled">
             <!-- don't give a name === doesn't send on POST/GET -->
             <span class="input-group-btn">
               <!-- icon-preview-clear button -->
@@ -87,7 +86,6 @@
                 @else
                 <input type="text" class="form-control image-preview-filename" name="image-preview" disabled="disabled">
                 @endif
-            <input type="text" class="form-control image-preview-filename" name="image-preview" disabled="disabled">
             <!-- don't give a name === doesn't send on POST/GET -->
             <span class="input-group-btn">
               <!-- image-preview-clear button -->
