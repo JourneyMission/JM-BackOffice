@@ -30,19 +30,22 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('login', 'API\UserController@login');
 Route::post('register', 'API\UserController@register');
+Route::post('details', 'API\UserController@details');
+
+
 Route::resource('Checkpoints', CheckpointsController::class);
+Route::resource('Badges', BadgesController::class);
+Route::resource('CategoryCheckpoints', CategoryCheckpointsController::class);
+Route::resource('CategoryMissions', CategoryMissionsController::class);
+Route::resource('Checkins', CheckinsController::class);
+Route::resource('CheckpointPhotos', CheckpointPhotosController::class);
+Route::resource('JoinMissions', JoinMissionsController::class);
+Route::resource('Missions', MissionsController::class);
+Route::resource('Profiles', ProfilesController::class);
+Route::resource('Proviences', ProviencesController::class);
+Route::resource('Regions', RegionsController::class);
+Route::resource('Reviews', ReviewsController::class);
 
 Route::group(['middleware' => 'auth:api'], function(){
-	Route::post('details', 'API\UserController@details');
-	Route::resource('Badges', BadgesController::class);
-	Route::resource('CategoryCheckpoints', CategoryCheckpointsController::class);
-	Route::resource('CategoryMissions', CategoryMissionsController::class);
-	Route::resource('Checkins', CheckinsController::class);
-	Route::resource('CheckpointPhotos', CheckpointPhotosController::class);
-	Route::resource('JoinMissions', JoinMissionsController::class);
-	Route::resource('Missions', MissionsController::class);
-	Route::resource('Profiles', ProfilesController::class);
-	Route::resource('Proviences', ProviencesController::class);
-	Route::resource('Regions', RegionsController::class);
-	Route::resource('Reviews', ReviewsController::class);
+
 });

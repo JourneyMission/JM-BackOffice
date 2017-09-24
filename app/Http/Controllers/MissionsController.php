@@ -10,9 +10,11 @@ use Prettus\Validator\Exceptions\ValidatorException;
 use App\Http\Requests\MissionCreateRequest;
 use App\Http\Requests\MissionUpdateRequest;
 use App\Repositories\MissionRepository;
+use App\Repositories\MissionCheckpointRepository;
 use App\Repositories\CategoryMissionRepository;
 use App\Repositories\ProvienceRepository;
 use App\Repositories\RegionRepository;
+use App\Repositories\CheckpointRepository;
 use App\Validators\MissionValidator;
 
 
@@ -26,17 +28,21 @@ class MissionsController extends Controller
     protected $region;
     protected $provience;
     protected $categoryMission;
+    protected $missionCheckpoint;
+    protected $checkpoint;
 
     /**
      * @var MissionValidator
      */
     protected $validator;
 
-    public function __construct(MissionRepository $repository,CategoryMissionRepository $categoryMission,RegionRepository $region,ProvienceRepository $provience, MissionValidator $validator)
+    public function __construct(MissionRepository $repository,CategoryMissionRepository $categoryMission,RegionRepository $region,ProvienceRepository $provience,MissionCheckpointRepository $missionCheckpoint,CheckpointRepository $checkpoint, MissionValidator $validator)
     {
         $this->repository = $repository;
         $this->region = $region;
         $this->provience = $provience;
+        $this->missionCheckpoint = $missionCheckpoint;
+        $this->checkpoint = $checkpoint;
         $this->categoryMission = $categoryMission;
         $this->validator  = $validator;
     }
@@ -88,7 +94,29 @@ class MissionsController extends Controller
                 $mission = $this->repository->update(['Mission_Photo' => $filename], $id);
         }
     }
+    public function manageCheckpoint($Checkpoint_Name,$id,$Order){
+        $checkpoint = $this->checkpoint->findWhere([
+            'Checkpoint_Name'=> $Checkpoint_Name
+        ])->first();
+        $missionCheckpoint = $this->missionCheckpoint->findWhere([
+            'Checkpoint_ID'=> $checkpoint->id,
+            'Mission_ID'=> $id,
+        ])->first();
 
+        if ($missionCheckpoint != null) {
+            $missionCheckpoint = $this->missionCheckpoint->update([
+            'Mission_ID' => $id,
+            'Checkpoint_ID'=> $checkpoint->id,
+            'Order'=> $Order,
+            ],$missionCheckpoint->id);
+        }else{
+            $missionCheckpoint = $this->missionCheckpoint->create([
+            'Mission_ID' => $id,
+            'Checkpoint_ID'=> $checkpoint->id,
+            'Order'=> $Order,
+            ]);
+        }
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -100,7 +128,7 @@ class MissionsController extends Controller
     {
 
         try {
-
+            
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
             if ($request->Mission_Status == 'on') {
                 $request->merge(['Mission_Status' => 1]);
@@ -116,6 +144,20 @@ class MissionsController extends Controller
             if($request->hasFile('Mission_Photo')){
                 MissionsController::uploadPhoto($request,$mission->id);
             }
+
+            if ($request->CheckpointCount!= 0) {
+                if (isset($request->MissionCheckpointOrder)) {
+                    MissionsController::manageCheckpoint($request->MissionCheckpointOrder,$mission->id,1);
+                }
+                for ($i=2; $i <= $request->CheckpointCount; $i++) {
+                    $flag = "MissionCheckpointOrder".$i;
+                    
+                    if (isset($request->$flag)) {
+                        MissionsController::manageCheckpoint($request->$flag,$mission->id,$i);
+                    }
+                }
+            }
+            
 
             $response = [
                 'message' => 'Mission created.',
@@ -177,7 +219,9 @@ class MissionsController extends Controller
         $regions = $this->region->all();
 
         if ($id != 0) {
-            $mission = $this->repository->with(['categoryMission','MissionSource','MissionDestination','Region'])->find($id);
+            $mission = $this->repository->with(['categoryMission','MissionSource','MissionDestination','Region','Checkpoint.Checkpoint','Checkpoint' => function ($query) {
+                    return $query->orderBy('Order','ASC');
+            }])->find($id);
         }
 
         return view('missions.edit', compact('mission','proviences','categoryMission','regions'));
@@ -210,6 +254,19 @@ class MissionsController extends Controller
             if($request->hasFile('Mission_Photo')){
                 MissionsController::uploadPhoto($request,$id);
             }
+            if ($request->CheckpointCount!= 0) {
+                if (isset($request->MissionCheckpointOrder)) {
+                    MissionsController::manageCheckpoint($request->MissionCheckpointOrder,$mission->id,1);
+                }
+                for ($i=2; $i <= $request->CheckpointCount; $i++) {
+                    $flag = "MissionCheckpointOrder".$i;
+                    
+                    if (isset($request->$flag)) {
+                        MissionsController::manageCheckpoint($request->$flag,$mission->id,$i);
+                    }
+                }
+            }
+
             $response = [
                 'message' => 'Mission updated.',
                 'data'    => $mission->toArray(),

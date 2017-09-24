@@ -53,16 +53,76 @@
             <textarea class="form-control" name="Checkpoint_Description" placeholder="Enter Checkpoint description" required>{{(isset($checkpoint)? $checkpoint->Checkpoint_Description : '')}}</textarea>
           </div>
         </div>
+          <div class="form-group">
+          <label class="control-label col-sm-6 div1">Checkpoint Icon :</label>
+          <div class="col-sm-6 input-group icon-preview">
+            @if(isset($checkpoint))
+                <input type="text" class="form-control icon-preview-filename" name="icon-preview" disabled="disabled" value="{{$checkpoint->Checkpoint_Icon}}" />
+                @else
+                <input type="text" class="form-control icon-preview-filename" name="icon-preview" disabled="disabled">
+                @endif
+            
+            <!-- don't give a name === doesn't send on POST/GET -->
+            <span class="input-group-btn">
+              <!-- icon-preview-clear button -->
+              <button type="button" class="btn btn-default icon-preview-clear" style="display:none;">
+                <span class="glyphicon glyphicon-remove"></span> Clear
+              </button>
+              <!-- icon-preview-input -->
+              <div class="btn btn-default icon-preview-input">
+                <span class="glyphicon glyphicon-folder-open"></span>
+                <span class="icon-preview-input-title">Browse</span>
+                @if(isset($checkpoint))
+                <input type="file" accept="image/png, image/jpeg, image/gif" name="Checkpoint_Icon" value="{{$checkpoint->Checkpoint_Icon}}" />
+                @else
+                <input type="file" accept="image/png, image/jpeg, image/gif" name="Checkpoint_Icon" />
+                @endif
+                
+                <!-- rename it -->
+              </div>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label col-sm-6 div1">Checkpoint Gray Icon :</label>
+          <div class="col-sm-6 input-group grayicon-preview">
+            @if(isset($checkpoint))
+                <input type="text" class="form-control grayicon-preview-filename" name="grayicon-preview" disabled="disabled" value="{{$checkpoint->Checkpoint_GrayIcon}}"/>
+                @else
+                <input type="text" class="form-control grayicon-preview-filename" name="grayicon-preview" disabled="disabled">
+                @endif
+            
+            <!-- don't give a name === doesn't send on POST/GET -->
+            <span class="input-group-btn">
+              <!-- image-preview-clear button -->
+              <button type="button" class="btn btn-default grayicon-preview-clear" style="display:none;">
+                <span class="glyphicon glyphicon-remove"></span> Clear
+              </button>
+              <!-- image-preview-input -->
+              <div class="btn btn-default grayicon-preview-input">
+                <span class="glyphicon glyphicon-folder-open"></span>
+                <span class="grayicon-preview-input-title">Browse</span>
+                @if(isset($checkpoint))
+                <input type="file" accept="image/png, image/jpeg, image/gif" name="Checkpoint_GrayIcon" value="{{$checkpoint->Checkpoint_GrayIcon}}" />
+                @else
+                <input type="file" accept="image/png, image/jpeg, image/gif" name="Checkpoint_GrayIcon" />
+                @endif
+                
+                <!-- rename it -->
+              </div>
+            </span>
+          </div>
+        </div>
         <div class="form-group">
           <label class="control-label col-sm-6 div1">Checkpoint Picture :</label>
           <div class="col-sm-6 input-group image-preview">
-            @if(isset($checkpoint))
-                @foreach($checkpoint->checkpointPhoto as $Photo)
-                <input type="text" class="form-control image-preview-filename" name="image-preview" disabled="disabled" value="{{$Photo->Checkpoint_Photo}}"/>
+            @if(isset($checkpoint) && isset($checkpoint->checkpointPhoto))
+                <input type="text" class="form-control image-preview-filename" name="image-preview" disabled="disabled" value="@foreach($checkpoint->checkpointPhoto as $Photo){{$Photo->Checkpoint_Photo}},
                 @endforeach
-                @else
-                <input type="text" class="form-control image-preview-filename" name="image-preview" disabled="disabled">
-                @endif
+                "/>
+            @else
+              <input type="text" class="form-control image-preview-filename" name="image-preview" disabled="disabled">
+            @endif
             
             <!-- don't give a name === doesn't send on POST/GET -->
             <span class="input-group-btn">
@@ -74,7 +134,12 @@
               <div class="btn btn-default image-preview-input">
                 <span class="glyphicon glyphicon-folder-open"></span>
                 <span class="image-preview-input-title">Browse</span>
-                @if(isset($checkpoint))
+                @if(isset($checkpoint) && isset($checkpoint->checkpointPhoto))
+                    @foreach($checkpoint->checkpointPhoto as $Photo)
+                    <input type="file" accept="image/png, image/jpeg, image/gif" name="Checkpoint_Photo" value="{{$Photo->Checkpoint_Photo}}"/>
+                    @endforeach
+                @elseif(isset($checkpoint))
+                <input type="file" accept="image/png, image/jpeg, image/gif" name="Checkpoint_Photo" />
                 @else
                 <input type="file" accept="image/png, image/jpeg, image/gif" name="Checkpoint_Photo" />
                 @endif
@@ -223,7 +288,13 @@
         trigger: 'manual',
         html: true,
         title: "<strong>Preview</strong>" + $(closebtn)[0].outerHTML,
+        @if(isset($checkpoint) &&  isset($checkpoint->checkpointPhoto))
+            content: "@foreach($checkpoint->checkpointPhoto as $Photo)
+<img src='{{URL::to('/storage/checkpoint/'.$Photo->Checkpoint_Photo)}}' width=250 height=200 />@endforeach
+",
+        @else
         content: "There's no image",
+        @endif
         placement: 'bottom'
       });
       // Clear event
@@ -254,5 +325,157 @@
         reader.readAsDataURL(file);
       });
     });
+    $(document).on('click', '#close-preview', function () {
+    $('.icon-preview').popover('hide');
+      // Hover befor close the preview
+      $('.icon-preview').hover(
+        function () {
+          $('.icon-preview').popover('show');
+        },
+        function () {
+          $('.icon-preview').popover('hide');
+        }
+        );
+    });
+
+  $(function () {
+      // Create the close button
+      var closebtn = $('<button/>', {
+        type: "button",
+        text: 'x',
+        id: 'close-preview',
+        style: 'font-size: initial;',
+      });
+      closebtn.attr("class", "close pull-right");
+      // Set the popover default content
+      $('.icon-preview').popover({
+        trigger: 'manual',
+        html: true,
+        title: "<strong>Preview</strong>" + $(closebtn)[0].outerHTML,
+        @if(isset($checkpoint))
+        content: "<img src='{{URL::to('/storage/checkpoint/icon/'.$checkpoint->Checkpoint_Icon)}}'' width=250 height=200 />",
+        @else
+        content: "There's no image",
+        @endif
+        placement: 'bottom'
+      });
+      // Clear event
+      $('.icon-preview-clear').click(function () {
+        $('.icon-preview').attr("data-content", "").popover('hide');
+        $('.icon-preview-filename').val("");
+        $('.icon-preview-clear').hide();
+        $('.icon-preview-input input:file').val("");
+        $(".icon-preview-input-title").text("Browse");
+      });
+      // Create the preview image
+      $(".icon-preview-input input:file").change(function () {
+        var img = $('<img/>', {
+          id: 'dynamic',
+          width: 250,
+          height: 200
+        });
+        var file = this.files[0];
+        var reader = new FileReader();
+        // Set preview image into the popover data-content
+        reader.onload = function (e) {
+          $(".icon-preview-input-title").text("Change");
+          $(".icon-preview-clear").show();
+          $(".icon-preview-filename").val(file.name);
+          img.attr('src', e.target.result);
+          $(".icon-preview").attr("data-content", $(img)[0].outerHTML).popover("show");
+        }
+        reader.readAsDataURL(file);
+      });
+    });
+    $(document).on('click', '#close-preview', function () {
+    $('.grayicon-preview').popover('hide');
+      // Hover befor close the preview
+      $('.grayicon-preview').hover(
+        function () {
+          $('.grayicon-preview').popover('show');
+        },
+        function () {
+          $('.grayicon-preview').popover('hide');
+        }
+        );
+    });
+
+  $(function () {
+      // Create the close button
+      var closebtn = $('<button/>', {
+        type: "button",
+        text: 'x',
+        id: 'close-preview',
+        style: 'font-size: initial;',
+      });
+      closebtn.attr("class", "close pull-right");
+      // Set the popover default content
+      $('.grayicon-preview').popover({
+        trigger: 'manual',
+        html: true,
+        title: "<strong>Preview</strong>" + $(closebtn)[0].outerHTML,
+        @if(isset($checkpoint))
+        content: "<img src='{{URL::to('/storage/checkpoint/grayicon/'.$checkpoint->Checkpoint_GrayIcon)}}'' width=250 height=200 />",
+        @else
+        content: "There's no image",
+        @endif
+        placement: 'bottom'
+      });
+      // Clear event
+      $('.grayicon-preview-clear').click(function () {
+        $('.grayicon-preview').attr("data-content", "").popover('hide');
+        $('.grayicon-preview-filename').val("");
+        $('.grayicon-preview-clear').hide();
+        $('.grayicon-preview-input input:file').val("");
+        $(".grayicon-preview-input-title").text("Browse");
+      });
+      // Create the preview image
+      $(".grayicon-preview-input input:file").change(function () {
+        var img = $('<img/>', {
+          id: 'dynamic',
+          width: 250,
+          height: 200
+        });
+        var file = this.files[0];
+        var reader = new FileReader();
+        // Set preview image into the popover data-content
+        reader.onload = function (e) {
+          $(".grayicon-preview-input-title").text("Change");
+          $(".grayicon-preview-clear").show();
+          $(".grayicon-preview-filename").val(file.name);
+          img.attr('src', e.target.result);
+          $(".grayicon-preview").attr("data-content", $(img)[0].outerHTML).popover("show");
+        }
+        reader.readAsDataURL(file);
+      });
+    });
+  @if(isset($checkpoint))
+    $(document).ready(function () {
+      $('.icon-preview').hover(
+        function () {
+          $('.icon-preview').popover('show');
+        },
+        function () {
+          $('.icon-preview').popover('hide');
+        }
+        );
+      $('.grayicon-preview').hover(
+        function () {
+          $('.grayicon-preview').popover('show');
+        },
+        function () {
+          $('.grayicon-preview').popover('hide');
+        }
+        );
+      $('.image-preview').hover(
+        function () {
+          $('.image-preview').popover('show');
+        },
+        function () {
+          $('.image-preview').popover('hide');
+        }
+        );
+    });
+  @endif
   </script>
   @endsection

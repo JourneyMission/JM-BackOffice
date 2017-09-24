@@ -6,24 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
-class JoinMission extends Model implements Transformable
+class MissionCheckpoint extends Model implements Transformable
 {
     use TransformableTrait;
 
     protected $fillable = [
 		'Mission_ID',
-		'Profile_ID',
-		'Mission_Status',
+        'Checkpoint_ID',
+		'Order',
 	];
 
-
-    public function Profile() {
-        return $this->belongsTo('App\Entities\Profile','Profile_ID','id');
+	public function Checkpoint() {
+        return $this->hasOne('App\Entities\Checkpoint','id','Checkpoint_ID');
     }
-
-
     public function Mission() {
         return $this->belongsTo('App\Entities\Mission','Mission_ID','id');
     }
-
 }

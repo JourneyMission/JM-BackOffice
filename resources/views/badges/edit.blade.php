@@ -228,7 +228,11 @@
         trigger: 'manual',
         html: true,
         title: "<strong>Preview</strong>" + $(closebtn)[0].outerHTML,
+        @if(isset($badge))
+        content: "<img src='{{URL::to('/storage/badge/icon/'.$badge->Badge_Photo)}}'' width=250 height=200 />",
+        @else
         content: "There's no image",
+        @endif
         placement: 'bottom'
       });
       // Clear event
@@ -259,5 +263,17 @@
         reader.readAsDataURL(file);
       });
     });
+  @if(isset($badge))
+    $(document).ready(function () {
+      $('.image-preview').hover(
+        function () {
+          $('.image-preview').popover('show');
+        },
+        function () {
+          $('.image-preview').popover('hide');
+        }
+        );
+    });
+  @endif
   </script>
   @endsection

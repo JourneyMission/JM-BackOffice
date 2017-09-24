@@ -16,6 +16,8 @@ class Checkpoint extends Model implements Transformable
 		'Checkpoint_Longtitude',
 		'Checkpoint_LatitudeDelta',
 		'Checkpoint_LongtitudeDelta',
+		'Checkpoint_Icon',
+		'Checkpoint_GrayIcon',
 		'Checkpoint_Description',
 		'Checkpoint_Score',
 		'Checkpoint_SpeacialScore',
@@ -27,8 +29,6 @@ class Checkpoint extends Model implements Transformable
 		'Category_Checkpoint_ID',
 	];
 
-	
-
     public function CategoryCheckpoint() {
         return $this->belongsTo('App\Entities\CategoryCheckpoint','Category_Checkpoint_ID','id');
     }
@@ -37,5 +37,8 @@ class Checkpoint extends Model implements Transformable
     }
     public function CheckpointPhoto(){
         return $this->hasMany('App\Entities\CheckpointPhoto','Checkpoint_ID','id');
+    }
+    public function Checkpoint() {
+        return $this->belongsTo('App\Entities\MissionCheckpoint','Checkpoint_ID','id');
     }
 }

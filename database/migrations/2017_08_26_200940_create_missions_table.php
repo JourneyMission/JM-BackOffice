@@ -17,10 +17,10 @@ class CreateMissionsTable extends Migration
             $table->increments('id');
 			$table->string('Mission_Name')->Mission_Name();
 			$table->text('Mission_Description')->Mission_Description();
-			$table->text('MissionCheckpointOrder')->MissionCheckpointOrder();
-			$table->string('Mission_Icon')->Mission_Icon();
+			$table->text('MissionCheckpointOrder')->MissionCheckpointOrder()->nullable;
+			$table->string('Mission_Icon')->Mission_Icon()->nullable();
 			$table->integer('Mission_Score')->Mission_Score();
-			$table->string('Mission_Photo')->Mission_Photo();
+			$table->string('Mission_Photo')->Mission_Photo()->nullable();
 			$table->integer('Region_ID')->Region_ID();
 			$table->integer('Category_Mission_ID')->Category_Mission_ID()->nullable();
 			$table->integer('Mission_Source')->Mission_Source();

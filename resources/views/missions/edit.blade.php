@@ -164,17 +164,18 @@
         <div class="form-group">
           <div class="control-group" id="fields">
             <label class="control-label col-sm-12" for="MissionCheckpointOrder">Add Checkpoint : </label>
-            <input type="hidden" name="CheckpointCount" id="count"value="1" />
+            <input type="hidden" name="CheckpointCount" id="count" value="1" />
             <div class="controls col-sm-12">
               <div class="entry input-group col-xs-3" >
                 <input class="form-control" type="text" placeholder="Checkpoint Name" name="MissionCheckpointOrder" id="field1"/>
                 <span class="input-group-btn">
-                  <button class="btn btn-success btn-add add-more" type="button"><span class="fa fa-plus"></span></button>
+                  <button class="add-more btn btn-success btn-add" type="button" id="addme"><span class="fa fa-plus"></span></button>
                 </span>
               </div>
             </div>
           </div>
         </div>
+
   {!! Form::close() !!}
     </div>
   </div>
@@ -222,7 +223,11 @@
         trigger: 'manual',
         html: true,
         title: "<strong>Preview</strong>" + $(closebtn)[0].outerHTML,
+        @if(isset($mission))
+        content: "<img src='{{URL::to('/storage/mission/icon/'.$mission->Mission_Icon)}}'' width=250 height=200 />",
+        @else
         content: "There's no image",
+        @endif
         placement: 'bottom'
       });
       // Clear event
@@ -280,7 +285,11 @@
         trigger: 'manual',
         html: true,
         title: "<strong>Preview</strong>" + $(closebtn)[0].outerHTML,
+        @if(isset($mission))
+        content: "<img src='{{URL::to('/storage/mission/photo/'.$mission->Mission_Photo)}}'' width=250 height=200 />",
+        @else
         content: "There's no image",
+        @endif
         placement: 'bottom'
       });
       // Clear event
@@ -323,7 +332,10 @@
   $(document).ready(function(){
     var next = 1;
     $(".add-more").click(function(e){
-      e.preventDefault();
+      if (next > 9) {
+        alert("Checkpoint must be less than 10");
+      }else{
+            e.preventDefault();
       var addto = "#field" + next;
       var addRemove = "#field" + (next);
       next = next + 1;
@@ -343,10 +355,37 @@
         $(fieldID).remove();
       });
       $("#field" + next).easyAutocomplete(options);
+      }
     });
-  });
   
   $("#field1").easyAutocomplete(options);
+  @if(isset($mission))
+      $('.icon-preview').hover(
+        function () {
+          $('.icon-preview').popover('show');
+        },
+        function () {
+          $('.icon-preview').popover('hide');
+        }
+        );
+      $('.image-preview').hover(
+        function () {
+          $('.image-preview').popover('show');
+        },
+        function () {
+          $('.image-preview').popover('hide');
+        }
+        );
+    @if(isset($mission->Checkpoint))
+      var flag = 1;
+      @foreach($mission->Checkpoint as $checkpoint)
+       $(".add-more").click(); 
+       $("#field"+flag).val("{{$checkpoint->Checkpoint->Checkpoint_Name}}");
+       flag++;
+      @endforeach
+    @endif
+  @endif
 
+    });
 </script>
 @endsection

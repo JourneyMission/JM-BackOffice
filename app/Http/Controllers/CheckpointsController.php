@@ -62,7 +62,7 @@ class CheckpointsController extends Controller
         return view('checkpoints.index', compact('checkpoints'));
     }
 
-    public function uploadIMG(CheckpointCreateRequest $request,$id){
+    public function uploadIMG($request,$id){
         if($request->hasFile('Checkpoint_Photo')){
                 
                 $extension = $request->Checkpoint_Photo->extension();
@@ -72,9 +72,48 @@ class CheckpointsController extends Controller
                 $request->file('Checkpoint_Photo')->storeAs(
                     $path, $filename
                 );
-
-                $checkpointPhoto = $this->checkpointPhoto->create(array('Checkpoint_Photo' => $filename,
-                    'Checkpoint_ID'=> $id));
+                $checkpointPhoto = $this->checkpointPhoto->findWhere(['Checkpoint_ID'=> $id])->first();
+                if ($checkpointPhoto != null) {
+                    $checkpointPhoto = $this->checkpointPhoto->update([
+                        'Checkpoint_Photo' => $filename,
+                        'Checkpoint_ID'=> $id
+                    ],$checkpointPhoto->id);
+                }else{
+                    $checkpointPhoto = $this->checkpointPhoto->create([
+                        'Checkpoint_Photo' => $filename,
+                        'Checkpoint_ID'=> $id
+                    ]);
+                }
+                
+        }
+    }
+    public function uploadIcon($request,$id){
+        if($request->hasFile('Checkpoint_Icon')){
+                
+                $extension = $request->Checkpoint_Icon->extension();
+                
+                $filename = substr( md5( $request->Checkpoint_Name . '-' . time() ), 0, 15) . '.'.$extension; 
+                $path = 'public/checkpoint/icon';
+                $request->file('Checkpoint_Icon')->storeAs(
+                    $path, $filename
+                );
+                $request->merge(['checkpoint_Icon' => $filename]);
+                
+                $checkpoint = $this->repository->update(['Checkpoint_Icon' => $filename], $id);
+        }
+    }
+    public function uploadGrayIcon($request,$id){
+        if($request->hasFile('Checkpoint_GrayIcon')){
+                
+                $extension = $request->Checkpoint_GrayIcon->extension();
+                
+                $filename = substr( md5( $request->Checkpoint_Name . '-' . time() ), 0, 15) . '.'.$extension; 
+                $path = 'public/checkpoint/grayicon';
+                $request->file('Checkpoint_GrayIcon')->storeAs(
+                    $path, $filename
+                );
+                $request->merge(['checkpoint_GrayIcon' => $filename]);
+                $checkpoint = $this->repository->update(['Checkpoint_GrayIcon' => $filename], $id);
         }
     }
 
@@ -95,6 +134,8 @@ class CheckpointsController extends Controller
             $checkpoint = $this->repository->create($request->all());
             
             CheckpointsController::uploadIMG($request,$checkpoint->id);
+            CheckpointsController::uploadIcon($request,$checkpoint->id);
+            CheckpointsController::uploadGrayIcon($request,$checkpoint->id);
 
             $response = [
                 'message' => 'Checkpoint created.',
@@ -171,7 +212,15 @@ class CheckpointsController extends Controller
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
             
             $checkpoint = $this->repository->update($request->all(), $id);
-
+            if($request->hasFile('Checkpoint_Photo')){
+                CheckpointsController::uploadIMG($request,$checkpoint->id);
+            }
+            if($request->hasFile('Checkpoint_Icon')){
+                CheckpointsController::uploadIcon($request,$checkpoint->id);
+            }
+            if($request->hasFile('Checkpoint_GrayIcon')){
+                CheckpointsController::uploadGrayIcon($request,$checkpoint->id);
+            }
             $response = [
                 'message' => 'Checkpoint updated.',
                 'data'    => $checkpoint->toArray(),

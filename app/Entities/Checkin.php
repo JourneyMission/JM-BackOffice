@@ -11,10 +11,16 @@ class Checkin extends Model implements Transformable
     use TransformableTrait;
 
     protected $fillable = [
-		'Checkin_ID',
 		'Profile_ID',
 		'Checkpoint_ID',
 		'Checkin_Date',
 	];
+
+	public function Checkpoint() {
+        return $this->hasOne('App\Entities\Chekpoint','Checkpoint_ID','id');
+    }
+    public function Profile() {
+        return $this->hasOne('App\Entities\Profile','Profile_ID','id');
+    }
 
 }

@@ -41,4 +41,7 @@ class Mission extends Model implements Transformable
         return $this->belongsTo('App\Entities\CategoryMission','Category_Mission_ID','id');
     }
 
+    public function Checkpoint(){
+        return $this->hasMany('App\Entities\MissionCheckpoint','Mission_ID','id');
+    }
 }

@@ -16,4 +16,8 @@ class Review extends Model implements Transformable
 		'Profile_ID',
 	];
 
+	public function Profile() {
+        return $this->hasOne('App\Entities\Profile','Profile_ID','id');
+    }
+
 }

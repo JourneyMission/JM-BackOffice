@@ -20,6 +20,8 @@ class CreateCheckpointsTable extends Migration
 			$table->string('Checkpoint_Longtitude')->Checkpoint_Longtitude();
 			$table->string('Checkpoint_LatitudeDelta')->Checkpoint_LatitudeDelta();
 			$table->string('Checkpoint_LongtitudeDelta')->Checkpoint_LongtitudeDelta();
+			$table->string('Checkpoint_Icon')->Checkpoint_Icon()->nullable();
+			$table->string('Checkpoint_GrayIcon')->Checkpoint_GrayIcon()->nullable();
 			$table->text('Checkpoint_Description')->Checkpoint_Description();
 			$table->integer('Checkpoint_Score')->Checkpoint_Score();
 			$table->integer('Checkpoint_SpeacialScore')->Checkpoint_SpeacialScore()->nullable();
