@@ -14,6 +14,12 @@ use App\Validators\MissionValidator;
  */
 class MissionRepositoryEloquent extends BaseRepository implements MissionRepository
 {
+    protected $fieldSearchable = [
+        'Mission_Name',
+        'id',
+        'Mission_Destination',
+        'Mission_Source'
+    ];
     /**
      * Specify Model class name
      *

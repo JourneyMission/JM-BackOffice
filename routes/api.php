@@ -41,6 +41,7 @@ Route::resource('Checkins', CheckinsController::class);
 Route::resource('CheckpointPhotos', CheckpointPhotosController::class);
 Route::resource('JoinMissions', JoinMissionsController::class);
 Route::resource('Missions', MissionsController::class);
+Route::resource('MissionCheckpoint', MissionCheckpointController::class);
 Route::resource('Profiles', ProfilesController::class);
 Route::resource('Proviences', ProviencesController::class);
 Route::resource('Regions', RegionsController::class);

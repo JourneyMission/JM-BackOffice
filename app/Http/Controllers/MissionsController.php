@@ -55,11 +55,15 @@ class MissionsController extends Controller
      */
     public function index()
     {
+        
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
+        
         $missions = $this->repository->with(['categoryMission','MissionSource','MissionDestination','Region'])->all();
 
+        
+            
         if (request()->wantsJson()) {
-
+            $missions = $this->repository->all();
             return response()->json([
                 'data' => $missions,
             ]);
@@ -193,9 +197,9 @@ class MissionsController extends Controller
     public function show($id)
     {
         
-
+        $mission = $this->repository->find($id);
         if (request()->wantsJson()) {
-            $mission = $this->repository->find($id);
+            
             return response()->json([
                 'data' => $mission,
             ]);

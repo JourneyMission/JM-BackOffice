@@ -18,12 +18,12 @@ class JoinMission extends Model implements Transformable
 
 
     public function Profile() {
-        return $this->belongsTo('App\Entities\Profile','Profile_ID','id');
+        return $this->hasMany('App\Entities\Profile','Profile_ID','id');
     }
 
 
     public function Mission() {
-        return $this->belongsTo('App\Entities\Mission','Mission_ID','id');
+        return $this->hasMany('App\Entities\Mission','Mission_ID','id');
     }
 
 }
