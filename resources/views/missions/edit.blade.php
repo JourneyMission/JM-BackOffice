@@ -57,6 +57,11 @@
         <div class="form-group">
           <label class="control-label col-sm-6 div1">Mission Icon :</label>
           <div class="col-sm-6 input-group icon-preview">
+            @if(isset($mission))
+                <input type="text" class="form-control icon-preview-filename" name="icon-preview" disabled="disabled" value="{{$mission->Mission_Icon}}" />
+                @else
+                <input type="text" class="form-control icon-preview-filename" name="icon-preview" disabled="disabled">
+                @endif
             <input type="text" class="form-control icon-preview-filename" name="icon-preview" disabled="disabled">
             <!-- don't give a name === doesn't send on POST/GET -->
             <span class="input-group-btn">
@@ -77,6 +82,11 @@
         <div class="form-group">
           <label class="control-label col-sm-6 div1">Mission Picture :</label>
           <div class="col-sm-6 input-group image-preview">
+            @if(isset($mission))
+                <input type="text" class="form-control image-preview-filename" name="image-preview" disabled="disabled" value="{{$mission->Mission_Photo}}" />
+                @else
+                <input type="text" class="form-control image-preview-filename" name="image-preview" disabled="disabled">
+                @endif
             <input type="text" class="form-control image-preview-filename" name="image-preview" disabled="disabled">
             <!-- don't give a name === doesn't send on POST/GET -->
             <span class="input-group-btn">

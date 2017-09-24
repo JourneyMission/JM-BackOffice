@@ -57,7 +57,11 @@
           <div class="form-group">
             <label class="control-label col-sm-6 div1">Badge Picture :</label>
             <div class="col-sm-6 input-group image-preview">
-              <input type="text" class="form-control image-preview-filename" name="image-preview" disabled="disabled">
+              @if(isset($badge))
+                <input type="text" class="form-control image-preview-filename" name="image-preview" disabled="disabled" value="{{$badge->Badge_Photo}}" />
+                @else
+                <input type="text" class="form-control image-preview-filename" name="image-preview" disabled="disabled">
+                @endif
               <!-- don't give a name === doesn't send on POST/GET -->
               <span class="input-group-btn">
                 <!-- image-preview-clear button -->
