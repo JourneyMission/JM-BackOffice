@@ -18,6 +18,7 @@ class JoinMissionRepositoryEloquent extends BaseRepository implements JoinMissio
         'Profile_ID',
         'Mission_ID',
         'id',
+        'Mission_Status'
     ];
     /**
      * Specify Model class name
