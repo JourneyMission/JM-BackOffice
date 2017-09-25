@@ -14,6 +14,11 @@ use App\Validators\JoinMissionValidator;
  */
 class JoinMissionRepositoryEloquent extends BaseRepository implements JoinMissionRepository
 {
+    protected $fieldSearchable = [
+        'Profile_ID',
+        'Mission_ID',
+        'id',
+    ];
     /**
      * Specify Model class name
      *
