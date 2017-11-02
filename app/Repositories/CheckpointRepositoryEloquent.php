@@ -14,6 +14,9 @@ use App\Validators\CheckpointValidator;
  */
 class CheckpointRepositoryEloquent extends BaseRepository implements CheckpointRepository
 {
+    protected $fieldSearchable = [
+        'id',
+    ];
     /**
      * Specify Model class name
      *

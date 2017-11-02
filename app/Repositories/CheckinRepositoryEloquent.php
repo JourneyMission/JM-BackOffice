@@ -14,6 +14,12 @@ use App\Validators\CheckinValidator;
  */
 class CheckinRepositoryEloquent extends BaseRepository implements CheckinRepository
 {
+    protected $fieldSearchable = [
+        'id',
+        'Checkpoint_ID',
+        'Mission_ID',
+        'Checkin_Date'
+    ];
     /**
      * Specify Model class name
      *

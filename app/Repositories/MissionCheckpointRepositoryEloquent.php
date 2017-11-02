@@ -14,6 +14,11 @@ use App\Validators\MissionCheckpointValidator;
  */
 class MissionCheckpointRepositoryEloquent extends BaseRepository implements MissionCheckpointRepository
 {
+    protected $fieldSearchable = [
+        'id',
+        'Mission_ID',
+        'Checkpoint_ID'
+    ];
     /**
      * Specify Model class name
      *

@@ -183,7 +183,10 @@ return [
         Laravel\Socialite\SocialiteServiceProvider::class,
         Prettus\Repository\Providers\RepositoryServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
-
+        Barryvdh\Cors\ServiceProvider::class,
+        Rebing\GraphQL\GraphQLServiceProvider::class,
+        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
+        Graphiql\GraphiqlServiceProvider::class,
     ],
 
     /*
@@ -236,6 +239,8 @@ return [
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
          'Form' => Collective\Html\FormFacade::class,
       'Html' => Collective\Html\HtmlFacade::class,
+      'GraphQL' => Rebing\GraphQL\Support\Facades\GraphQL::class,
+      'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
 
     ],
 

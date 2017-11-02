@@ -23,7 +23,7 @@ class JoinMission extends Model implements Transformable
 
 
     public function Mission() {
-        return $this->hasMany('App\Entities\Mission','Mission_ID','id');
+        return $this->hasMany('App\Entities\Mission','id','Mission_ID');
     }
 
 }

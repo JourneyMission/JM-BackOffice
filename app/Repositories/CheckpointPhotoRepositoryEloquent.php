@@ -14,6 +14,10 @@ use App\Validators\CheckpointPhotoValidator;
  */
 class CheckpointPhotoRepositoryEloquent extends BaseRepository implements CheckpointPhotoRepository
 {
+    protected $fieldSearchable = [
+        'id',
+        'Checkpoint_ID'
+    ];
     /**
      * Specify Model class name
      *
