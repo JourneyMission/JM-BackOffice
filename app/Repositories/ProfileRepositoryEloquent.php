@@ -14,6 +14,16 @@ use App\Validators\ProfileValidator;
  */
 class ProfileRepositoryEloquent extends BaseRepository implements ProfileRepository
 {
+    protected $fieldSearchable = [
+        'id',
+        'Profile_ProviderID',
+        'Profile_Name',
+        'Profile_Email',
+        'Profile_Team',
+        'Profile_Score',
+        'Profile_AccessToken',
+        'Profile_Team'
+    ];
     /**
      * Specify Model class name
      *

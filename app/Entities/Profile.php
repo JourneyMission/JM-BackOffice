@@ -15,6 +15,8 @@ class Profile extends Model implements Transformable
 		'Profile_Name',
 		'Profile_Email',
 		'Profile_Team',
+        'Profile_Score',
+        'Profile_AccessToken',
 	];
 
     public function user()

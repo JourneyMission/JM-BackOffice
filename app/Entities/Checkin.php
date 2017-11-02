@@ -14,10 +14,14 @@ class Checkin extends Model implements Transformable
 		'Profile_ID',
 		'Checkpoint_ID',
 		'Checkin_Date',
+        'Mission_ID'
 	];
 
 	public function Checkpoint() {
-        return $this->hasOne('App\Entities\Chekpoint','Checkpoint_ID','id');
+        return $this->hasOne('App\Entities\Checkpoint','id','Checkpoint_ID');
+    }
+    public function Mission() {
+        return $this->hasOne('App\Entities\Mission','id','Mission_ID');
     }
     public function Profile() {
         return $this->hasOne('App\Entities\Profile','Profile_ID','id');

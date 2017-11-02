@@ -195,4 +195,19 @@ class CheckinsController extends Controller
 
         return redirect()->back()->with('message', 'Checkin deleted.');
     }
+
+    public function CheckMission($id,$pid){
+        $checkins = $this->repository->findWhere(['Mission_ID'=>$id,'Profile_ID'=>$pid])->all();
+        $returnme = array();
+        foreach ($checkins as $k => $v) {
+            array_push($returnme, $v["Checkpoint_ID"]);
+        }
+        sort($returnme);
+        if (request()->wantsJson()) {
+            return response()->json([
+                'data' => $returnme,
+            ]);
+        }
+        return $id;
+    }
 }
