@@ -46,8 +46,11 @@ Route::resource('Profiles', ProfilesController::class);
 Route::resource('Proviences', ProviencesController::class);
 Route::resource('Regions', RegionsController::class);
 Route::resource('Reviews', ReviewsController::class);
+Route::resource('ProfileBadges', ProfileBadgesController::class);
 Route::get('/CheckMission/{id}/{pid}', 'CheckinsController@CheckMission');
 Route::get('/CheckpointinMission/{id}', 'MissionCheckpointsController@CheckMission');
+Route::get('/ProvienceSearch', 'MissionsController@Proviences');
+Route::get('/RecommendMission/{id}', 'MissionsController@RecommendMission');
 Route::group(['middleware' => 'auth:api'], function(){
 
 });

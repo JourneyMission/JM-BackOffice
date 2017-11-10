@@ -18,6 +18,7 @@ class CheckinRepositoryEloquent extends BaseRepository implements CheckinReposit
         'id',
         'Checkpoint_ID',
         'Mission_ID',
+        'Profile_ID',
         'Checkin_Date'
     ];
     /**

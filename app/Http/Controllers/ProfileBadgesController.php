@@ -7,35 +7,29 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
-use App\Http\Requests\ProfileCreateRequest;
-use App\Http\Requests\ProfileUpdateRequest;
-use App\Repositories\ProfileRepository;
-use App\Repositories\CheckinRepository;
-use App\Repositories\JoinMissionRepository;
-use App\Validators\ProfileValidator;
+use App\Http\Requests\ProfileBadgeCreateRequest;
+use App\Http\Requests\ProfileBadgeUpdateRequest;
+use App\Repositories\ProfileBadgeRepository;
+use App\Validators\ProfileBadgeValidator;
 
 
-class ProfilesController extends Controller
+class ProfileBadgesController extends Controller
 {
 
     /**
-     * @var ProfileRepository
+     * @var ProfileBadgeRepository
      */
     protected $repository;
-    protected $CheckinRepository;
-    protected $JoinMissionRepository;
 
     /**
-     * @var ProfileValidator
+     * @var ProfileBadgeValidator
      */
     protected $validator;
 
-    public function __construct(ProfileRepository $repository, ProfileValidator $validator,JoinMissionRepository $JoinMissionRepository,CheckinRepository $CheckinRepository)
+    public function __construct(ProfileBadgeRepository $repository, ProfileBadgeValidator $validator)
     {
         $this->repository = $repository;
         $this->validator  = $validator;
-        $this->CheckinRepository = $CheckinRepository;
-        $this->JoinMissionRepository = $JoinMissionRepository;
     }
 
 
@@ -47,37 +41,37 @@ class ProfilesController extends Controller
     public function index()
     {
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        $profiles = $this->repository->all();
+        $profileBadges = $this->repository->all();
 
         if (request()->wantsJson()) {
 
             return response()->json([
-                'data' => $profiles,
+                'data' => $profileBadges,
             ]);
         }
 
-        return view('profiles.index', compact('profiles'));
+        return view('profileBadges.index', compact('profileBadges'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  ProfileCreateRequest $request
+     * @param  ProfileBadgeCreateRequest $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(ProfileCreateRequest $request)
+    public function store(ProfileBadgeCreateRequest $request)
     {
 
         try {
 
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
 
-            $profile = $this->repository->create($request->all());
+            $profileBadge = $this->repository->create($request->all());
 
             $response = [
-                'message' => 'Profile created.',
-                'data'    => $profile->toArray(),
+                'message' => 'ProfileBadge created.',
+                'data'    => $profileBadge->toArray(),
             ];
 
             if ($request->wantsJson()) {
@@ -108,22 +102,16 @@ class ProfilesController extends Controller
      */
     public function show($id)
     {
-        $profile = $this->repository->find($id);
-        $mission = $this->JoinMissionRepository->findWhere(['Profile_id'=>$id,'Mission_Status'=>'1'])->count();
-        $checkpoint = $this->CheckinRepository->findWhere(['Profile_id'=>$id])->count();
-        $rank = $this->repository->orderBy('Profile_Score','desc')
-        ->findWhere([['Profile_Score', '>=', $profile['Profile_Score']]])->count();
+        $profileBadge = $this->repository->find($id);
+
         if (request()->wantsJson()) {
 
             return response()->json([
-                'data' => $profile,
-                'mission' => $mission,
-                'checkpoint' => $checkpoint,
-                'rank' => $rank
+                'data' => $profileBadge,
             ]);
         }
 
-        return view('profiles.show', compact('profile'));
+        return view('profileBadges.show', compact('profileBadge'));
     }
 
 
@@ -137,32 +125,32 @@ class ProfilesController extends Controller
     public function edit($id)
     {
 
-        $profile = $this->repository->find($id);
+        $profileBadge = $this->repository->find($id);
 
-        return view('profiles.edit', compact('profile'));
+        return view('profileBadges.edit', compact('profileBadge'));
     }
 
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  ProfileUpdateRequest $request
+     * @param  ProfileBadgeUpdateRequest $request
      * @param  string            $id
      *
      * @return Response
      */
-    public function update(ProfileUpdateRequest $request, $id)
+    public function update(ProfileBadgeUpdateRequest $request, $id)
     {
 
         try {
 
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
 
-            $profile = $this->repository->update($request->all(), $id);
+            $profileBadge = $this->repository->update($request->all(), $id);
 
             $response = [
-                'message' => 'Profile updated.',
-                'data'    => $profile->toArray(),
+                'message' => 'ProfileBadge updated.',
+                'data'    => $profileBadge->toArray(),
             ];
 
             if ($request->wantsJson()) {
@@ -195,17 +183,16 @@ class ProfilesController extends Controller
      */
     public function destroy($id)
     {
-
         $deleted = $this->repository->delete($id);
 
         if (request()->wantsJson()) {
 
             return response()->json([
-                'message' => 'Profile deleted.',
+                'message' => 'ProfileBadge deleted.',
                 'deleted' => $deleted,
             ]);
         }
 
-        return redirect()->back()->with('message', 'Profile deleted.');
+        return redirect()->back()->with('message', 'ProfileBadge deleted.');
     }
 }

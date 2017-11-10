@@ -4,21 +4,20 @@ namespace App\Repositories;
 
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
-use App\Repositories\MissionRepository;
-use App\Entities\Mission;
-use App\Validators\MissionValidator;
+use App\Repositories\Profile_BadgeRepository;
+use App\Entities\ProfileBadge;
+use App\Validators\ProfileBadgeValidator;
 
 /**
- * Class MissionRepositoryEloquent
+ * Class ProfileBadgeRepositoryEloquent
  * @package namespace App\Repositories;
  */
-class MissionRepositoryEloquent extends BaseRepository implements MissionRepository
+class ProfileBadgeRepositoryEloquent extends BaseRepository implements ProfileBadgeRepository
 {
-    protected $fieldSearchable = [
+     protected $fieldSearchable = [
         'id',
-        'Mission_Name',
-        'Mission_Destination',
-        'Mission_Source'
+        'Profile_ID',
+        'Badge_ID'
     ];
     /**
      * Specify Model class name
@@ -27,7 +26,7 @@ class MissionRepositoryEloquent extends BaseRepository implements MissionReposit
      */
     public function model()
     {
-        return Mission::class;
+        return ProfileBadge::class;
     }
 
     /**
@@ -38,7 +37,7 @@ class MissionRepositoryEloquent extends BaseRepository implements MissionReposit
     public function validator()
     {
 
-        return MissionValidator::class;
+        return ProfileBadgeValidator::class;
     }
 
 
