@@ -7,26 +7,26 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
-use App\Http\Requests\ReviewCreateRequest;
-use App\Http\Requests\ReviewUpdateRequest;
-use App\Repositories\ReviewRepository;
-use App\Validators\ReviewValidator;
+use App\Http\Requests\ProfileBadgeCreateRequest;
+use App\Http\Requests\ProfileBadgeUpdateRequest;
+use App\Repositories\ProfileBadgeRepository;
+use App\Validators\ProfileBadgeValidator;
 
 
-class ReviewsController extends Controller
+class ProfileBadgesController extends Controller
 {
 
     /**
-     * @var ReviewRepository
+     * @var ProfileBadgeRepository
      */
     protected $repository;
 
     /**
-     * @var ReviewValidator
+     * @var ProfileBadgeValidator
      */
     protected $validator;
 
-    public function __construct(ReviewRepository $repository, ReviewValidator $validator)
+    public function __construct(ProfileBadgeRepository $repository, ProfileBadgeValidator $validator)
     {
         $this->repository = $repository;
         $this->validator  = $validator;
@@ -41,37 +41,37 @@ class ReviewsController extends Controller
     public function index()
     {
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        $reviews = $this->repository->all();
+        $profileBadges = $this->repository->all();
 
         if (request()->wantsJson()) {
 
             return response()->json([
-                'data' => $reviews,
+                'data' => $profileBadges,
             ]);
         }
 
-        return view('reviews.index', compact('reviews'));
+        return view('profileBadges.index', compact('profileBadges'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  ReviewCreateRequest $request
+     * @param  ProfileBadgeCreateRequest $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(ReviewCreateRequest $request)
+    public function store(ProfileBadgeCreateRequest $request)
     {
 
         try {
 
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
 
-            $review = $this->repository->create($request->all());
+            $profileBadge = $this->repository->create($request->all());
 
             $response = [
-                'message' => 'Review created.',
-                'data'    => $review->toArray(),
+                'message' => 'ProfileBadge created.',
+                'data'    => $profileBadge->toArray(),
             ];
 
             if ($request->wantsJson()) {
@@ -102,22 +102,16 @@ class ReviewsController extends Controller
      */
     public function show($id)
     {
-        $review = $this->repository->findWhere([
-            'Checkpoint_ID'=> $id
-        ])->all();
-        $count = $this->repository->findWhere([['Checkpoint_ID','=',$id],['Review_Rate','!=','0']])->count();
-        $rate = $this->repository->findWhere([['Checkpoint_ID','=',$id],['Review_Rate','!=','0']])->avg('Review_Rate');
-        $rateShow = floatval(number_format($rate, 2, '.', ''));
+        $profileBadge = $this->repository->find($id);
+
         if (request()->wantsJson()) {
+
             return response()->json([
-                'data' => $review,
-                'rate' => $rateShow,
-                'rateShow' => $rateShow,
-                'count' =>$count,
+                'data' => $profileBadge,
             ]);
         }
 
-        return view('reviews.show', compact('review'));
+        return view('profileBadges.show', compact('profileBadge'));
     }
 
 
@@ -131,32 +125,32 @@ class ReviewsController extends Controller
     public function edit($id)
     {
 
-        $review = $this->repository->find($id);
+        $profileBadge = $this->repository->find($id);
 
-        return view('reviews.edit', compact('review'));
+        return view('profileBadges.edit', compact('profileBadge'));
     }
 
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  ReviewUpdateRequest $request
+     * @param  ProfileBadgeUpdateRequest $request
      * @param  string            $id
      *
      * @return Response
      */
-    public function update(ReviewUpdateRequest $request, $id)
+    public function update(ProfileBadgeUpdateRequest $request, $id)
     {
 
         try {
 
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
 
-            $review = $this->repository->update($request->all(), $id);
+            $profileBadge = $this->repository->update($request->all(), $id);
 
             $response = [
-                'message' => 'Review updated.',
-                'data'    => $review->toArray(),
+                'message' => 'ProfileBadge updated.',
+                'data'    => $profileBadge->toArray(),
             ];
 
             if ($request->wantsJson()) {
@@ -194,11 +188,11 @@ class ReviewsController extends Controller
         if (request()->wantsJson()) {
 
             return response()->json([
-                'message' => 'Review deleted.',
+                'message' => 'ProfileBadge deleted.',
                 'deleted' => $deleted,
             ]);
         }
 
-        return redirect()->back()->with('message', 'Review deleted.');
+        return redirect()->back()->with('message', 'ProfileBadge deleted.');
     }
 }

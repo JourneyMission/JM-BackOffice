@@ -36,6 +36,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(\App\Repositories\MissionRepository::class, \App\Repositories\MissionRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\ReviewRepository::class, \App\Repositories\ReviewRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\MissionCheckpointRepository::class, \App\Repositories\MissionCheckpointRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\ProfileBadgeRepository::class, \App\Repositories\ProfileBadgeRepositoryEloquent::class);
         //:end-bindings:
     }
 }

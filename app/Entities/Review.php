@@ -14,10 +14,15 @@ class Review extends Model implements Transformable
 		'Review_Content',
 		'Review_Rate',
 		'Profile_ID',
+		'Checkpoint_ID'
 	];
 
 	public function Profile() {
-        return $this->hasOne('App\Entities\Profile','Profile_ID','id');
+        return $this->hasOne('App\Entities\Profile','id','Profile_ID');
+    }
+
+    public function Checkpoint() {
+        return $this->hasOne('App\Entities\Checkpoint','id','Checkpoint_ID');
     }
 
 }

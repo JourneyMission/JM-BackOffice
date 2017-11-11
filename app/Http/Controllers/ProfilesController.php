@@ -10,6 +10,8 @@ use Prettus\Validator\Exceptions\ValidatorException;
 use App\Http\Requests\ProfileCreateRequest;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Repositories\ProfileRepository;
+use App\Repositories\CheckinRepository;
+use App\Repositories\JoinMissionRepository;
 use App\Validators\ProfileValidator;
 
 
@@ -20,16 +22,20 @@ class ProfilesController extends Controller
      * @var ProfileRepository
      */
     protected $repository;
+    protected $CheckinRepository;
+    protected $JoinMissionRepository;
 
     /**
      * @var ProfileValidator
      */
     protected $validator;
 
-    public function __construct(ProfileRepository $repository, ProfileValidator $validator)
+    public function __construct(ProfileRepository $repository, ProfileValidator $validator,JoinMissionRepository $JoinMissionRepository,CheckinRepository $CheckinRepository)
     {
         $this->repository = $repository;
         $this->validator  = $validator;
+        $this->CheckinRepository = $CheckinRepository;
+        $this->JoinMissionRepository = $JoinMissionRepository;
     }
 
 
@@ -102,12 +108,19 @@ class ProfilesController extends Controller
      */
     public function show($id)
     {
-        $profile = $this->repository->find($id);
-
+        $profile = $this->repository->orderBy('Profile_Score','desc')->all();
+        $mission = $this->JoinMissionRepository->findWhere(['Profile_id'=>$id,'Mission_Status'=>'1'])->count();
+        $checkpoint = $this->CheckinRepository->findWhere(['Profile_id'=>$id])->count();
+        $Myprofile = $this->repository->find($id);
+        $rank = $this->repository->orderBy('Profile_Score','desc')
+        ->findWhere([['Profile_Score', '>=', $Myprofile['Profile_Score']]])->count();
         if (request()->wantsJson()) {
 
             return response()->json([
                 'data' => $profile,
+                'mission' => $mission,
+                'checkpoint' => $checkpoint,
+                'rank' => $rank
             ]);
         }
 
@@ -183,7 +196,7 @@ class ProfilesController extends Controller
      */
     public function destroy($id)
     {
-        
+
         $deleted = $this->repository->delete($id);
 
         if (request()->wantsJson()) {

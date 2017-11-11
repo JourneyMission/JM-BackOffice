@@ -14,6 +14,12 @@ use App\Validators\ReviewValidator;
  */
 class ReviewRepositoryEloquent extends BaseRepository implements ReviewRepository
 {
+     protected $fieldSearchable = [
+        'id',
+        'Profile_ID',
+        'Checkpoint_ID',
+        'Review_Rate'
+    ];
     /**
      * Specify Model class name
      *
