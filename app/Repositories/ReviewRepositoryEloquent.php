@@ -17,6 +17,7 @@ class ReviewRepositoryEloquent extends BaseRepository implements ReviewRepositor
      protected $fieldSearchable = [
         'id',
         'Profile_ID',
+        'Checkpoint_ID',
         'Review_Rate'
     ];
     /**

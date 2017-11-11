@@ -343,12 +343,19 @@ class MissionsController extends Controller
         foreach ($join as $k => $v) {
             array_push($join_missions, $v["Mission_ID"]);
         }
-        $missions = $this->repository->scopeQuery(function($query){
+        if (empty($join_missions)) {
+            $missions = $this->repository->all();
+        }else{
+            $missions = $this->repository->scopeQuery(function($query){
     return $query->leftJoin('join_missions','missions.id','=','join_missions.Mission_id')->
-               selectRaw('missions.*, count(join_missions.Mission_id) AS count')->
+               selectRaw('missions.*,count(join_missions.Mission_id) AS count')->
+               where('missions.Mission_Status',1)->
+               whereNull('join_missions.Mission_Status')->
                groupBy('join_missions.Mission_id')->
                orderBy('count','ASC');
 })->findWhereNotIn('missions.id', $join_missions);
+        }
+        
 
         if (request()->wantsJson()) {
             

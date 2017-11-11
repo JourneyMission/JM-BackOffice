@@ -108,11 +108,12 @@ class ProfilesController extends Controller
      */
     public function show($id)
     {
-        $profile = $this->repository->find($id);
+        $profile = $this->repository->orderBy('Profile_Score','desc')->all();
         $mission = $this->JoinMissionRepository->findWhere(['Profile_id'=>$id,'Mission_Status'=>'1'])->count();
         $checkpoint = $this->CheckinRepository->findWhere(['Profile_id'=>$id])->count();
+        $Myprofile = $this->repository->find($id);
         $rank = $this->repository->orderBy('Profile_Score','desc')
-        ->findWhere([['Profile_Score', '>=', $profile['Profile_Score']]])->count();
+        ->findWhere([['Profile_Score', '>=', $Myprofile['Profile_Score']]])->count();
         if (request()->wantsJson()) {
 
             return response()->json([

@@ -102,12 +102,18 @@ class ReviewsController extends Controller
      */
     public function show($id)
     {
-        $review = $this->repository->find($id);
-
+        $review = $this->repository->findWhere([
+            'Checkpoint_ID'=> $id
+        ])->all();
+        $count = $this->repository->findWhere([['Checkpoint_ID','=',$id],['Review_Rate','!=','0']])->count();
+        $rate = $this->repository->findWhere([['Checkpoint_ID','=',$id],['Review_Rate','!=','0']])->avg('Review_Rate');
+        $rateShow = floatval(number_format($rate, 2, '.', ''));
         if (request()->wantsJson()) {
-
             return response()->json([
                 'data' => $review,
+                'rate' => $rateShow,
+                'rateShow' => $rateShow,
+                'count' =>$count,
             ]);
         }
 
