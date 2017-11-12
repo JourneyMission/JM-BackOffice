@@ -170,23 +170,6 @@
           </div>
         </div>
         <br><br><br><br><br>
-        <ol class="breadcrumb-info">
-          <li class="breadcrumb-text">
-            Checkpoint Score
-          </li>
-        </ol>
-        <div class="form-group">
-          <label class="control-label col-sm-6 div1">Checkpoint Score :</label>
-          <div class="col-sm-3 div2">
-            <input type="number" class="form-control" name="Checkpoint_Score" placeholder="Score" required value="{{(isset($checkpoint)? $checkpoint->Checkpoint_Score : '')}}">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="control-label col-sm-6 div1">Checkpoint Special Score :</label>
-          <div class="col-sm-3 div2">
-            <input type="number" class="form-control" name="Checkpoint_SpeacialScore" placeholder="Score" required value="{{(isset($checkpoint)? $checkpoint->Checkpoint_SpeacialScore : '')}}">
-          </div>
-        </div>
       </div>
       <div class="col-sm-6">
         <ol class="breadcrumb-info">
@@ -217,9 +200,26 @@
         <br><br>
         <ol class="breadcrumb-info">
           <li class="breadcrumb-text">
-            Checkpoint Date/Time
+            Checkpoint Score
           </li>
-
+        </ol>
+        <div class="form-group">
+          <label class="control-label col-sm-6 div1">Checkpoint Score :</label>
+          <div class="col-sm-3 div2">
+            <input type="number" class="form-control" name="Checkpoint_Score" placeholder="Score" required value="{{(isset($checkpoint)? $checkpoint->Checkpoint_Score : '')}}">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label col-sm-6 div1">Checkpoint Special Score :</label>
+          <div class="col-sm-3 div2">
+            <input type="number" class="form-control" name="Checkpoint_SpeacialScore" placeholder="Score" required value="{{(isset($checkpoint)? $checkpoint->Checkpoint_SpeacialScore : '')}}">
+          </div>
+        </div>
+        <br><br><br><br><br>
+        <ol class="breadcrumb-info">
+          <li class="breadcrumb-text">
+            Checkpoint Speacial Score Date/Time
+          </li>
         </ol>
         <div class="form-group">
           <label class="control-label col-sm-12">Checkpoint Date :</label>

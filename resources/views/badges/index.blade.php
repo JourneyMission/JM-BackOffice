@@ -73,7 +73,11 @@
                     <td> {{$badge->id }}</td>
                     <td>{{ $badge->Badge_Name }}</td>
                     <td>{{ $badge->Badge_Description }}</td>
-                    <td>{{ $badge->Badge_Status }}</td>
+                    @if($badge->Badge_Status == 1)
+                    <td>Enabled</td>
+                    @else
+                    <td>Disable</td>
+                    @endif
                     <td>{{ $badge->updated_at }}</td>
                     <td>
                       <a href="/Badges/{{ $badge->id }}/edit">

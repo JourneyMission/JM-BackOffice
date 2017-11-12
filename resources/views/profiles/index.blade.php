@@ -47,6 +47,7 @@
                     <th>Name</th>
                     <th>Email</th>
                     <th>Team</th>
+                    <th>Score</th>
                     <th>Role</th>
                     <th>Last Login</th>
                     <th>Manage</th>
@@ -64,24 +65,19 @@
                     <td>{{ $profile->Profile_Email }}</td>
                     @if ($profile->Profile_Team == NULL)
                         <td>No Data !</td>
-                    @elseif ($profile->Profile_Team = 1)
-                        <td><font color="red">ทีมสีแดง</font></td>
+                    @elseif ($profile->Profile_Team == 'Fox')
+                        <td><font color="red">Fox</font></td>
                     @else
-                        <td><font color="blue">ทีมสีเขียว</font></td>
+                        <td><font color="blue">Bear</font></td>
                     @endif
+                        <td>{{ $profile->Profile_Score }}</td>
                     @if ($profile->Profile_Role == 1)
                         <td>Admin</td>
+                    @else
+                        <td>User</td>
                     @endif
                     <td>{{ $profile->updated_at }}</td>
                     <td>
-                      <a href="/Profiles/{{ $profile->id }}">
-                      <span class="badge badge-success"> 
-                        <i class="fa fa-search" aria-hidden="true"></i> View</a>
-                      </span>
-                      <a href="/Profiles/{{ $profile->id }}/edit">
-                      <span class="badge badge-warning">
-                        <i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
-                      </span>
                       <a href="#" onclick="if(confirm('ยืนยันการลบข้อมูล {{ $profile->Profile_Name }} ') == true){
                             document.getElementById('Delete-form').submit();
                         }">
