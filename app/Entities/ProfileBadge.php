@@ -16,4 +16,12 @@ class ProfileBadge extends Model implements Transformable
 		'Profile_ID',
 	];
 
+	public function Badge() {
+        return $this->hasOne('App\Entities\Badge','id','Badge_ID');
+    }
+
+    public function Profile() {
+        return $this->hasOne('App\Entities\Profile','id','Profile_ID');
+    }
+
 }

@@ -15,6 +15,9 @@ use App\Repositories\CategoryCheckpointRepository;
 use App\Repositories\CategoryMissionRepository;
 use App\Repositories\ProvienceRepository;
 use App\Repositories\RegionRepository;
+use App\Repositories\JoinMissionRepository;
+use App\Repositories\CheckinRepository;
+use App\Repositories\ProfileBadgeRepository;
 
 class BadgesController extends Controller
 {
@@ -27,13 +30,25 @@ class BadgesController extends Controller
     protected $provience;
     protected $categoryMission;
     protected $categoryCheckpoint;
+    protected $joinMission;
+    protected $checkin;
+    protected $profileBadge;
 
     /**
      * @var BadgeValidator
      */
     protected $validator;
 
-    public function __construct(BadgeRepository $repository,CategoryMissionRepository $categoryMission,RegionRepository $region,ProvienceRepository $provience,CategoryCheckpointRepository $categoryCheckpoint, BadgeValidator $validator)
+    public function __construct(
+        BadgeRepository $repository,
+        CategoryMissionRepository $categoryMission,
+        RegionRepository $region,
+        ProvienceRepository $provience,
+        CategoryCheckpointRepository $categoryCheckpoint, 
+        JoinMissionRepository $joinMission, 
+        CheckinRepository $checkin,
+        ProfileBadgeRepository $profileBadge,
+        BadgeValidator $validator)
     {
         $this->repository = $repository;
         $this->validator  = $validator;
@@ -41,6 +56,9 @@ class BadgesController extends Controller
         $this->region = $region;
         $this->provience = $provience;
         $this->categoryMission = $categoryMission;
+        $this->joinMission = $joinMission;
+        $this->checkin = $checkin;
+        $this->profileBadge = $profileBadge;
     }
 
 
@@ -70,15 +88,15 @@ class BadgesController extends Controller
 
     public function uploadPhoto($request,$id){
         if($request->hasFile('Badge_Photo')){
-                
-                $extension = $request->Badge_Photo->extension();
-                $filename = $id. "-" . substr( md5( $request->Badge_Name . '-' . time() ), 0, 15) . '.'.$extension; 
-                $path = 'public/badge/';
-                $request->file('Badge_Photo')->storeAs(
-                    $path, $filename
-                );
-                $request->merge(['Badge_Photo' => $filename]);
-                $mission = $this->repository->update(['Badge_Photo' => $filename], $id);
+
+            $extension = $request->Badge_Photo->extension();
+            $filename = $id. "-" . substr( md5( $request->Badge_Name . '-' . time() ), 0, 15) . '.'.$extension; 
+            $path = 'public/badge/';
+            $request->file('Badge_Photo')->storeAs(
+                $path, $filename
+            );
+            $request->merge(['Badge_Photo' => $filename]);
+            $mission = $this->repository->update(['Badge_Photo' => $filename], $id);
         }
     }
 
@@ -142,7 +160,7 @@ class BadgesController extends Controller
      */
     public function show($id)
     {
-        
+
 
         if (request()->wantsJson()) {
         	$badge = $this->repository->find($id);
@@ -199,7 +217,7 @@ class BadgesController extends Controller
             }
             $badge = $this->repository->update($request->all(), $id);
             if($request->hasFile('Badge_Photo')){
-                
+
                 BadgesController::uploadPhoto($request,$id);
             }
 
@@ -249,5 +267,120 @@ class BadgesController extends Controller
         }
 
         return redirect('/Badges')->with('message', 'Badge deleted.');
+    }
+
+    public function BadgeCheck($id){
+        $badges = $this->repository->findWhere(['Badge_Status'=>1]);
+        $badge = array();
+        $message = '';
+        $date = date('Y-d-m', time());
+        $time = date('h:i:s', time());
+        if (request()->wantsJson()) {
+            foreach ($badges as $key => $value) {
+                $letmecheck = $this->profileBadge->findWhere(['Profile_ID'=>$id,'Badge_ID'=>$value['id']]);
+                if($letmecheck->count() != 0){
+                }else if(
+                    $value['Badge_StartDate'] != null && 
+                    $value['Badge_EndDate'] != null &&
+                    $date > $value['Badge_StartDate'] &&
+                    $date < $value['Badge_EndDate'] 
+                ){
+                    if(
+                        $value['Badge_StartTime'] != null && 
+                        $value['Badge_EndTime'] != null &&
+                        $time > $value['Badge_StartTime'] &&
+                        $time < $value['Badge_EndTime']
+                    ){
+                        if($value['Badge_Category_Checkpoint_Count'] != null && 
+                            $value['Badge_Category_Checkpoint_Count'] != 0 
+                        ){
+                            $data = $this->checkin->scopeQuery(function($query){
+                                return $query->
+                                selectRaw('checkpoints.Category_Checkpoint_ID,Count(checkpoints.Category_Checkpoint_ID) As Count')->
+                                join('checkpoints', 'Checkpoint_ID', '=', 'checkpoints.id')->
+                                groupBy('checkpoints.Category_Checkpoint_ID');
+                            })->findWhere(['Profile_ID'=> $id]);
+                            foreach ($data as $key => $datavalue) {
+                                if (
+                                    $datavalue['Category_Checkpoint_ID'] == $value['Badge_Category_Checkpoint'] &&
+                                    $datavalue['Count'] >=  $value['Badge_Category_Checkpoint_Count']
+                                ) {
+                                    array_push($badge, $value['Badge_Name']);
+                                    $this->profileBadge->create(['Profile_ID'=>$id,'Badge_ID'=>$value['id']]);
+                                    $message = "Get New Badge";
+                                }
+                            }
+                        }
+                        if($value['Badge_Region_Count'] != null && 
+                            $value['Badge_Region_Count'] != 0 
+                        ){
+                            $data = $this->joinMission->scopeQuery(function($query){
+                                return $query->
+                                selectRaw('missions.Region_ID,Count(missions.Region_ID) As Count')->
+                                join('missions', 'join_missions.Mission_ID', '=', 'missions.id')->
+                                groupBy('missions.Region_ID');
+                            })->findWhere(['Profile_ID'=> $id]);
+                            foreach ($data as $key => $datavalue) {
+                                if (
+                                    $datavalue['Region_ID'] == $value['Badge_Region_ID'] &&
+                                    $datavalue['Count'] >=  $value['Badge_Region_Count']
+                                ) {
+                                    array_push($badge, $value['Badge_Name']);
+                                    $this->profileBadge->create(['Profile_ID'=>$id,'Badge_ID'=>$value['id']]);
+                                    $message = "Get New Badge";
+                                }
+                            }
+                        }
+                        if($value['Badge_Category_Mission_Count'] != null && 
+                            $value['Badge_Category_Mission_Count'] != 0 
+                        ){
+                            $data = $this->joinMission->scopeQuery(function($query){
+                                return $query->
+                                selectRaw('missions.Category_Mission_ID,Count(missions.Category_Mission_ID) As Count')->
+                                join('missions', 'join_missions.Mission_ID', '=', 'missions.id')->
+                                groupBy('missions.Category_Mission_ID');
+                            })->findWhere(['Profile_ID'=> $id]);
+                            foreach ($data as $key => $datavalue) {
+                                if (
+                                    $datavalue['Category_Mission_ID'] == $value['Badge_Category_Mission'] &&
+                                    $datavalue['Count'] >=  $value['Badge_Category_Mission_Count']
+                                ) {
+                                    array_push($badge, $value['Badge_Name']);
+                                    $this->profileBadge->create(['Profile_ID'=>$id,'Badge_ID'=>$value['id']]);
+                                    $message = "Get New Badge";
+                                }
+                            }
+                        }
+                        if($value['Badge_Provience_Count'] != null && 
+                            $value['Badge_Provience_Count'] != 0 
+                        ){
+                            $data = $this->checkin->scopeQuery(function($query){
+                                return $query->
+                                selectRaw('checkpoints.Provience_ID,Count(checkpoints.Provience_ID) As Count')->
+                                join('checkpoints', 'Checkpoint_ID', '=', 'checkpoints.id')->
+                                groupBy('checkpoints.Provience_ID');
+                            })->findWhere(['Profile_ID'=> $id]);
+                            foreach ($data as $key => $datavalue) {
+                                if (
+                                    $datavalue['Provience_ID'] == $value['Badge_Provience_ID'] &&
+                                    $datavalue['Count'] >=  $value['Badge_Provience_Count']
+                                ) {
+                                    array_push($badge, $value['Badge_Name']);
+                                    $this->profileBadge->create(['Profile_ID'=>$id,'Badge_ID'=>$value['id']]);
+                                    $message = "Get New Badge";
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+            
+            return response()->json([
+                'message' => $message,
+                'data' => $badge,
+            ]);
+
+        }
     }
 }

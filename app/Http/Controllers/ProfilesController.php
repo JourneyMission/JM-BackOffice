@@ -209,4 +209,32 @@ class ProfilesController extends Controller
 
         return redirect()->back()->with('message', 'Profile deleted.');
     }
+
+    public function TeamScore()
+    {
+
+        $FullScore = $this->repository->findWhere([['Profile_Score','!=',0]])->sum('Profile_Score');
+        $fox = $this->repository->findWhere([['Profile_Score','!=',0],['Profile_Team','=','fox']])->sum('Profile_Score');
+        $bear = $this->repository->findWhere([['Profile_Score','!=',0],['Profile_Team','=','bear']])->sum('Profile_Score');
+        if($FullScore != 0){
+
+        $fox = ($fox / $FullScore);
+        $bear = ($bear / $FullScore);
+        $fox = floatval(number_format($fox, 2, '.', ''));
+        $bear = floatval(number_format($bear, 2, '.', ''));
+
+        }else{
+            $bear = 0.5;
+            $fox = 0.5;
+        }
+        if (request()->wantsJson()) {
+
+            return response()->json([
+                'fox' => $fox,
+                'bear' => $bear,
+            ]);
+        }
+
+        
+    }
 }

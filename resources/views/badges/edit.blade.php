@@ -162,7 +162,7 @@
           <div class="col-sm-4 div2">
             <select class="form-control" name="Badge_Category_Mission">
               @foreach($categoryMission as $category)
-              <option Value="{{$category->id}}" {{(isset($mission) && $badge->Badge_Category_Mission == $category->id ? 'selected' : '')}}>{{$category->Category_Mission_Name}}</option>
+              <option Value="{{$category->id}}" {{(isset($badge) && ($badge->Badge_Category_Mission == $category->id) ? 'selected' : '')}}>{{$category->Category_Mission_Name}}</option>
               @endforeach
             </select>
           </div>
@@ -176,7 +176,7 @@
           <div class="col-sm-4 div2">
             <select class="form-control" name="Badge_Region_ID">
               @foreach($regions as $region)
-              <option Value="{{$region->id}}" {{(isset($mission) && $badge->Badge_Region_ID == $region->id ? 'selected' : '')}}>{{$region->Region_Name}}</option>
+              <option Value="{{$region->id}}" {{(isset($badge) && $badge->Badge_Region_ID == $region->id ? 'selected' : '')}}>{{$region->Region_Name}}</option>
               @endforeach
             </select>
           </div>

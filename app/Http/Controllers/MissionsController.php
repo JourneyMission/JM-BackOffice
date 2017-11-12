@@ -323,10 +323,10 @@ class MissionsController extends Controller
 
     public function Proviences(){
        $source = $this->repository->scopeQuery(function($query){
-            return $query->select('Proviences.Provience_Name')->distinct()->join('Proviences','Mission_Source','=','Proviences.id');
+            return $query->select('Proviences.id','Proviences.Provience_Name')->distinct()->join('Proviences','Mission_Source','=','Proviences.id')->orderBy('Proviences.id');
         })->get();
        $destination = $this->repository->scopeQuery(function($query){
-            return $query->select('Proviences.Provience_Name')->distinct()->join('Proviences','Mission_Destination','=','Proviences.id');
+            return $query->select('Proviences.id','Proviences.Provience_Name')->distinct()->join('Proviences','Mission_Destination','=','Proviences.id')->orderBy('Proviences.id');
         })->get();
        if (request()->wantsJson()) {
 
@@ -347,12 +347,10 @@ class MissionsController extends Controller
             $missions = $this->repository->all();
         }else{
             $missions = $this->repository->scopeQuery(function($query){
-    return $query->leftJoin('join_missions','missions.id','=','join_missions.Mission_id')->
-               selectRaw('missions.*,count(join_missions.Mission_id) AS count')->
+    return $query->
+               selectRaw('missions.*,(SELECT COUNT(join_missions.id) FROM join_missions WHERE join_missions.Mission_ID = missions.id  GROUP BY join_missions.Mission_ID)As COUNT')->
                where('missions.Mission_Status',1)->
-               whereNull('join_missions.Mission_Status')->
-               groupBy('join_missions.Mission_id')->
-               orderBy('count','ASC');
+               orderBy('count','DESC');
 })->findWhereNotIn('missions.id', $join_missions);
         }
         

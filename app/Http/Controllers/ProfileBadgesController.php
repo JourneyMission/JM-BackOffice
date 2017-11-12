@@ -102,7 +102,7 @@ class ProfileBadgesController extends Controller
      */
     public function show($id)
     {
-        $profileBadge = $this->repository->find($id);
+        $profileBadge = $this->repository->findWhere(['Profile_ID'=>$id]);
 
         if (request()->wantsJson()) {
 

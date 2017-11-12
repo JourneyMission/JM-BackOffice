@@ -11,6 +11,10 @@ use App\Http\Requests\CheckinCreateRequest;
 use App\Http\Requests\CheckinUpdateRequest;
 use App\Repositories\CheckinRepository;
 use App\Validators\CheckinValidator;
+use App\Repositories\CheckpointRepository;
+use App\Repositories\JoinMissionRepository;
+use App\Repositories\MissionRepository;
+use App\Repositories\ProfileRepository;
 
 
 class CheckinsController extends Controller
@@ -20,16 +24,28 @@ class CheckinsController extends Controller
      * @var CheckinRepository
      */
     protected $repository;
+    protected $checkpoint;
+    protected $profile;
+    protected $mission;
 
     /**
      * @var CheckinValidator
      */
     protected $validator;
 
-    public function __construct(CheckinRepository $repository, CheckinValidator $validator)
+    public function __construct(CheckinRepository $repository,
+        CheckpointRepository $checkpoint,
+        ProfileRepository $profile,
+        MissionRepository $mission,
+        JoinMissionRepository $joinmission,
+        CheckinValidator $validator)
     {
         $this->repository = $repository;
         $this->validator  = $validator;
+        $this->checkpoint = $checkpoint;
+        $this->profile = $profile;
+        $this->joinmission = $joinmission;
+        $this->mission = $mission;
     }
 
 
@@ -209,5 +225,29 @@ class CheckinsController extends Controller
             ]);
         }
         return $id;
+    }
+
+    public function Checkin($cid,$mid,$pid)
+    {
+        $checkpoint = $this->checkpoint->find($cid)->first();
+        $mission = $this->mission->find($mid)->first();
+        $profile = $this->profile->find($pid)->first();
+        $joinmission = $this->joinmission->findWhere(['Mission_ID'=>$mid,'Profile_ID'=>$pid])->first();
+        $score = $checkpoint['Checkpoint_Score'];
+        $complete = '';
+        if($joinmission){
+
+        }
+
+        if (request()->wantsJson()) {
+
+            return response()->json([
+                'data' => $joinmission,
+                'complete' => $complete,
+
+            ]);
+        }
+
+        return view('checkins.show', compact('checkin'));
     }
 }
