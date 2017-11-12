@@ -323,7 +323,7 @@ class MissionsController extends Controller
 
     public function Proviences(){
        $source = $this->repository->scopeQuery(function($query){
-            return $query->select('proviences.id','proviences.Provience_Name')->distinct()->join('proviences','Mission_Source','=','Proviences.id')->orderBy('proviences.id');
+            return $query->select('proviences.id','proviences.Provience_Name')->distinct()->join('proviences','Mission_Source','=','proviences.id')->orderBy('proviences.id');
         })->get();
        $destination = $this->repository->scopeQuery(function($query){
             return $query->select('proviences.id','proviences.provience_Name')->distinct()->join('proviences','Mission_Destination','=','proviences.id')->orderBy('proviences.id');
