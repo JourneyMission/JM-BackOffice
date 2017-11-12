@@ -195,4 +195,37 @@ class JoinMissionsController extends Controller
 
         return redirect()->back()->with('message', 'JoinMission deleted.');
     }
+
+    public function complete($pid,$mid)
+    {
+
+        try {
+
+            $mission = $this->repository->findWhere(['Profile_ID'=>$pid,'Mission_ID'=>$mid])->first();
+            $id = $mission['id'];
+
+            $joinMission = $this->repository->update(['Mission_Status'=>0], $id);
+
+            $response = [
+                'message' => 'JoinMission updated.',
+                'data'    => $joinMission->toArray(),
+            ];
+
+            if (request()->wantsJson()) {
+
+                return response()->json($response);
+            }
+
+            return redirect()->back()->with('message', $response['message']);
+        } catch (ValidatorException $e) {
+
+            if ($request->wantsJson()) {
+
+                return response()->json([
+                    'error'   => true,
+                    'message' => $e->getMessageBag()
+                ]);
+            }
+        }
+    }
 }
