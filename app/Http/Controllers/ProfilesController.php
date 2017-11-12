@@ -109,7 +109,7 @@ class ProfilesController extends Controller
     public function show($id)
     {
         $profile = $this->repository->orderBy('Profile_Score','desc')->all();
-        $mission = $this->JoinMissionRepository->findWhere(['Profile_id'=>$id,'Mission_Status'=>'1'])->count();
+        $mission = $this->JoinMissionRepository->findWhere(['Profile_id'=>$id,'Mission_Status'=>'0'])->count();
         $checkpoint = $this->CheckinRepository->findWhere(['Profile_id'=>$id])->count();
         $Myprofile = $this->repository->find($id);
         $rank = $this->repository->orderBy('Profile_Score','desc')
