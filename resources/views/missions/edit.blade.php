@@ -343,14 +343,18 @@
       if (next > 9) {
         alert("Checkpoint must be less than 10");
       }else{
-            e.preventDefault();
+      e.preventDefault();
       var addto = "#field" + next;
       var addRemove = "#field" + (next);
       next = next + 1;
       var newIn = '<input class="form-control" type="text" placeholder="Checkpoint Name" name="MissionCheckpointOrder' + next + '" autocomplete="off" id="field' + next + '" />';
       var newInput = $(newIn);
       var removeBtn = '<span class="input-group-btn"><button id="remove' + (next - 1) + '" class="btn btn-danger btn-add remove-me" type="button"><span class="fa fa-minus"></span></button></span>';
+      @if(isset($mission->Mission_Status) && $mission->Mission_Status != 0)
+      var removeButton = "";
+      @else
       var removeButton = $(removeBtn);
+      @endif
       $(addto).after(newInput);
       $(addRemove).after(removeButton);
       $("#field" + next).attr('data-source',$(addto).attr('data-source'));
@@ -389,8 +393,15 @@
       @foreach($mission->Checkpoint as $checkpoint)
        $(".add-more").click(); 
        $("#field"+flag).val("{{$checkpoint->Checkpoint->Checkpoint_Name}}");
+       @if(isset($mission->Mission_Status) && $mission->Mission_Status != 0)
+       $("#field"+flag).prop('disabled', true);
+       @endif
        flag++;
       @endforeach
+       @if(isset($mission->Mission_Status) && $mission->Mission_Status != 0)
+       $("#addme").prop('disabled', true);
+       $("#field"+flag).prop('disabled', true);
+       @endif
     @endif
   @endif
 
