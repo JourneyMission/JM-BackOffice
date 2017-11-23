@@ -2,232 +2,232 @@
 
 @section('content')
 <div class="content-wrapper">
- 
-@if(isset($mission))
 
-{!! Form::open(['method' => 'PATCH', 'action' => ['MissionsController@update','id'=>$mission->id],'class'=>'form-horizontal','files'=>true ]) !!}
+  @if(isset($mission))
 
-@else
+  {!! Form::open(['method' => 'PATCH', 'action' => ['MissionsController@update','id'=>$mission->id],'class'=>'form-horizontal','files'=>true ]) !!}
 
-{!! Form::open(['method' => 'POST', 'action' => ['MissionsController@store'],'class'=>'form-horizontal','files'=>true ]) !!}
+  @else
 
-@endif
-<div class="container-fluid">
-@if ($errors->any())
- <div class="alert alert-danger alert-dismissable">
-  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-  <ul>
-    @foreach ($errors->all() as $error)
-    <li>{{ $error }}</li>
-    @endforeach
-  </ul>
-</div>
-@endif
-  <!-- Breadcrumbs -->
+  {!! Form::open(['method' => 'POST', 'action' => ['MissionsController@store'],'class'=>'form-horizontal','files'=>true ]) !!}
+
+  @endif
+  <div class="container-fluid">
+    @if ($errors->any())
+    <div class="alert alert-danger alert-dismissable">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <ul>
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+      </ul>
+    </div>
+    @endif
+    <!-- Breadcrumbs -->
     <ol class="breadcrumb">
-          <li class="breadcrumb-item">
-            <a href="/home">Dashboard</a>&nbsp;
-          </li>
-          <li class="breadcrumb-item">
-            <a href="/Missions">Mission Management</a>&nbsp;
-          </li>
-          <li class="breadcrumb-item">New Mission</li>
-        </ol>
-  <div class="row">
-    <div class="col-sm-6">
-      <form class="form-horizontal">
-        <ol class="breadcrumb-info">
-          <li class="breadcrumb-text">
-            Mission Infomation
-          </li>
+      <li class="breadcrumb-item">
+        <a href="/home">Dashboard</a>&nbsp;
+      </li>
+      <li class="breadcrumb-item">
+        <a href="/Missions">Mission Management</a>&nbsp;
+      </li>
+      <li class="breadcrumb-item">New Mission</li>
+    </ol>
+    <div class="row">
+      <div class="col-sm-6">
+        <form class="form-horizontal">
+          <ol class="breadcrumb-info">
+            <li class="breadcrumb-text">
+              Mission Infomation
+            </li>
 
-        </ol>
-        <div class="form-group">
-          <label class="control-label col-sm-6 div1">Mission Name :</label>
-          <div class="col-sm-6 div2">
-            <input type="text" class="form-control" name="Mission_Name" placeholder="Enter Mission name" required value="{{(isset($mission)? $mission->Mission_Name : '')}}">
+          </ol>
+          <div class="form-group">
+            <label class="control-label col-sm-6 div1">Mission Name :</label>
+            <div class="col-sm-6 div2">
+              <input type="text" class="form-control" name="Mission_Name" placeholder="Enter Mission name" required value="{{(isset($mission)? $mission->Mission_Name : '')}}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-6 div1">Mission Description :</label>
+            <div class="col-sm-6 div2">
+              <textarea class="form-control" name="Mission_Description" placeholder="Enter Mission description" required> {{(isset($mission)? $mission->Mission_Description : '')}}</textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-6 div1">Mission Icon :</label>
+            <div class="col-sm-6 input-group icon-preview">
+              @if(isset($mission))
+              <input type="text" class="form-control icon-preview-filename" name="icon-preview" disabled="disabled" value="{{$mission->Mission_Icon}}" />
+              @else
+              <input type="text" class="form-control icon-preview-filename" name="icon-preview" disabled="disabled">
+              @endif
+              <!-- don't give a name === doesn't send on POST/GET -->
+              <span class="input-group-btn">
+                <!-- icon-preview-clear button -->
+                <button type="button" class="btn btn-default icon-preview-clear" style="display:none;">
+                  <span class="glyphicon glyphicon-remove"></span> Clear
+                </button>
+                <!-- icon-preview-input -->
+                <div class="btn btn-default icon-preview-input">
+                  <span class="glyphicon glyphicon-folder-open"></span>
+                  <span class="icon-preview-input-title">Browse</span>
+                  <input type="file" accept="image/png, image/jpeg, image/gif" name="Mission_Icon" value="{{(isset($mission)? $mission->Mission_Icon : '')}}" />
+                  <!-- rename it -->
+                </div>
+              </span>
+            </div>
+          </div>
+          <div>
+            <label class=" col-sm-6 div1"></label>
+            <div class="col-sm-6 div2">
+              <span style="color:gray">.png/.jpg 100*100px</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-6 div1">Mission Photo :</label>
+            <div class="col-sm-6 input-group image-preview">
+              @if(isset($mission))
+              <input type="text" class="form-control image-preview-filename" name="image-preview" disabled="disabled" value="{{$mission->Mission_Photo}}" />
+              @else
+              <input type="text" class="form-control image-preview-filename" name="image-preview" disabled="disabled">
+              @endif
+              <!-- don't give a name === doesn't send on POST/GET -->
+              <span class="input-group-btn">
+                <!-- image-preview-clear button -->
+                <button type="button" class="btn btn-default image-preview-clear" style="display:none;">
+                  <span class="glyphicon glyphicon-remove"></span> Clear
+                </button>
+                <!-- image-preview-input -->
+                <div class="btn btn-default image-preview-input">
+                  <span class="glyphicon glyphicon-folder-open"></span>
+                  <span class="image-preview-input-title">Browse</span>
+                  <input type="file" accept="image/png, image/jpeg" name="Mission_Photo" value="{{(isset($mission)? $mission->Mission_Photo : '')}}" />
+                  <!-- rename it -->
+                </div>
+              </span>
+            </div>
+          </div>
+          <div>
+            <label class=" col-sm-6 div1"></label>
+            <div class="col-sm-6 div2">
+              <span style="color:gray">.png/.jpg 68*324px</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-6 div1">Mission Category :</label>
+            <div class="col-sm-6 div2">
+              <select class="form-control" name="Category_Mission_ID">
+                @foreach($categoryMission as $category)
+                <option Value="{{$category->id}}" {{(isset($mission) && $mission->Category_Mission_ID == $category->id ? 'selected' : '')}}>{{$category->Category_Mission_Name}}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-6 div1">Mission Score :</label>
+            <div class="col-sm-3 div2">
+              <input type="number" class="form-control" name="Mission_Score" placeholder="Score" required value="{{(isset($mission)? $mission->Mission_Score : '')}}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-6 div1">Mission Status :</label>
+            <div class="col-sm-3 div2">
+              <input type="checkbox" id="Mission_Status" name="Mission_Status" data-toggle="toggle" data-on="Enable" data-off="Disable" data-onstyle="success" data-offstyle="danger" {{(isset($mission) && $mission->Mission_Status == 1 ? 'checked' : '')}}>
+            </div>
           </div>
         </div>
-        <div class="form-group">
-          <label class="control-label col-sm-6 div1">Mission Description :</label>
-          <div class="col-sm-6 div2">
-            <textarea class="form-control" name="Mission_Description" placeholder="Enter Mission description" required> {{(isset($mission)? $mission->Mission_Description : '')}}</textarea>
+        <div class="col-sm-6">
+          <ol class="breadcrumb-info">
+            <li class="breadcrumb-text">
+              Mission Location
+            </li>
+          </ol>
+          <div class="form-group">
+            <label class="control-label col-sm-4 div2">Mission Region :</label>
+            <div class="col-sm-6 div2">
+              <select class="form-control" name="Region_ID">
+                @foreach($regions as $region)
+                <option Value="{{$region->id}}" {{(isset($mission) && $mission->Region_ID == $region->id ? 'selected' : '')}}>{{$region->Region_Name}}</option>
+                @endforeach
+              </select>
+            </div>
           </div>
-        </div>
-        <div class="form-group">
-          <label class="control-label col-sm-6 div1">Mission Icon :</label>
-          <div class="col-sm-6 input-group icon-preview">
-            @if(isset($mission))
-                <input type="text" class="form-control icon-preview-filename" name="icon-preview" disabled="disabled" value="{{$mission->Mission_Icon}}" />
-                @else
-                <input type="text" class="form-control icon-preview-filename" name="icon-preview" disabled="disabled">
-                @endif
-            <!-- don't give a name === doesn't send on POST/GET -->
-            <span class="input-group-btn">
-              <!-- icon-preview-clear button -->
-              <button type="button" class="btn btn-default icon-preview-clear" style="display:none;">
-                <span class="glyphicon glyphicon-remove"></span> Clear
-              </button>
-              <!-- icon-preview-input -->
-              <div class="btn btn-default icon-preview-input">
-                <span class="glyphicon glyphicon-folder-open"></span>
-                <span class="icon-preview-input-title">Browse</span>
-                <input type="file" accept="image/png, image/jpeg, image/gif" name="Mission_Icon" value="{{(isset($mission)? $mission->Mission_Icon : '')}}" />
-                <!-- rename it -->
-              </div>
-            </span>
+          <div class="form-group">
+            <label class="control-label col-sm-12">Mission Location :</label>
+            <div class="col-sm-5 div2">
+              <!--<input type="text" class="form-control" name="Mission_Source" placeholder="Enter Source" required>-->
+              <select class="form-control" name="Mission_Source">
+                @foreach($proviences as $provience)
+                <option Value="{{$provience->id}}" {{(isset($mission) && $mission->Mission_Source == $provience->id ? 'selected' : '')}}>{{$provience->Provience_Name}}</option>
+                @endforeach
+              </select>
+            </div>
+            <label class="control-label col-sm-1 div3">to</label>
+            <div class="col-sm-5 div2">
+              <!--<input type="text" class="form-control" name="Mission_Destination" placeholder="Enter Desination" required>-->
+              <select class="form-control" name="Mission_Destination">
+                @foreach($proviences as $provience)
+                <option Value="{{$provience->id}}" {{(isset($mission) && $mission->Mission_Destination == $provience->id ? 'selected' : '')}}>{{$provience->Provience_Name}}</option>
+                @endforeach
+              </select>
+            </div>
           </div>
-        </div>
-        <div>
-              <label class=" col-sm-6 div1"></label>
-              <div class="col-sm-6 div2">
-                <span style="color:gray">.png/.jpg 100*100px</span>
+
+          <br><br>
+          <ol class="breadcrumb-info">
+            <li class="breadcrumb-text">
+              Checkpoint of Mission
+            </li>
+
+          </ol>
+          <div class="form-group">
+            <div class="control-group" id="fields">
+              <label class="control-label col-sm-12" for="MissionCheckpointOrder">Add Checkpoint : </label>
+              <input type="hidden" name="CheckpointCount" id="count" value="1" />
+              <div class="controls col-sm-12">
+                <div class="entry input-group col-xs-3" >
+                  <input class="form-control" type="text" placeholder="Checkpoint Name" name="MissionCheckpointOrder" id="field1"/>
+                  <span class="input-group-btn">
+                    <button class="add-more btn btn-success btn-add" type="button" id="addme"><span class="fa fa-plus"></span></button>
+                  </span>
+                </div>
               </div>
             </div>
-        <div class="form-group">
-          <label class="control-label col-sm-6 div1">Mission Photo :</label>
-          <div class="col-sm-6 input-group image-preview">
-            @if(isset($mission))
-                <input type="text" class="form-control image-preview-filename" name="image-preview" disabled="disabled" value="{{$mission->Mission_Photo}}" />
-                @else
-                <input type="text" class="form-control image-preview-filename" name="image-preview" disabled="disabled">
-                @endif
-            <!-- don't give a name === doesn't send on POST/GET -->
-            <span class="input-group-btn">
-              <!-- image-preview-clear button -->
-              <button type="button" class="btn btn-default image-preview-clear" style="display:none;">
-                <span class="glyphicon glyphicon-remove"></span> Clear
-              </button>
-              <!-- image-preview-input -->
-              <div class="btn btn-default image-preview-input">
-                <span class="glyphicon glyphicon-folder-open"></span>
-                <span class="image-preview-input-title">Browse</span>
-                <input type="file" accept="image/png, image/jpeg" name="Mission_Photo" value="{{(isset($mission)? $mission->Mission_Photo : '')}}" />
-                <!-- rename it -->
-              </div>
-            </span>
-          </div>
-        </div>
-        <div>
-              <label class=" col-sm-6 div1"></label>
-              <div class="col-sm-6 div2">
-                <span style="color:gray">.png/.jpg 68*324px</span>
-              </div>
+            @if(isset($error))
+            <div class="alert alert-danger">
+              <strong>Error!</strong>  {{$error}}
             </div>
-        <div class="form-group">
-          <label class="control-label col-sm-6 div1">Mission Category :</label>
-          <div class="col-sm-6 div2">
-            <select class="form-control" name="Category_Mission_ID">
-              @foreach($categoryMission as $category)
-              <option Value="{{$category->id}}" {{(isset($mission) && $mission->Category_Mission_ID == $category->id ? 'selected' : '')}}>{{$category->Category_Mission_Name}}</option>
-              @endforeach
-            </select>
+            @endif
           </div>
-        </div>
-        <div class="form-group">
-          <label class="control-label col-sm-6 div1">Mission Score :</label>
-          <div class="col-sm-3 div2">
-            <input type="number" class="form-control" name="Mission_Score" placeholder="Score" required value="{{(isset($mission)? $mission->Mission_Score : '')}}">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="control-label col-sm-6 div1">Mission Status :</label>
-          <div class="col-sm-3 div2">
-            <input type="checkbox" id="Mission_Status" name="Mission_Status" data-toggle="toggle" data-on="Enable" data-off="Disable" data-onstyle="success" data-offstyle="danger" {{(isset($mission) && $mission->Mission_Status == 1 ? 'checked' : '')}}>
-          </div>
+
+
+          {!! Form::close() !!}
         </div>
       </div>
-      <div class="col-sm-6">
-        <ol class="breadcrumb-info">
-          <li class="breadcrumb-text">
-            Mission Location
-          </li>
-        </ol>
-        <div class="form-group">
-          <label class="control-label col-sm-4 div2">Mission Region :</label>
-          <div class="col-sm-6 div2">
-            <select class="form-control" name="Region_ID">
-              @foreach($regions as $region)
-              <option Value="{{$region->id}}" {{(isset($mission) && $mission->Region_ID == $region->id ? 'selected' : '')}}>{{$region->Region_Name}}</option>
-              @endforeach
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="control-label col-sm-12">Mission Location :</label>
-          <div class="col-sm-5 div2">
-            <!--<input type="text" class="form-control" name="Mission_Source" placeholder="Enter Source" required>-->
-            <select class="form-control" name="Mission_Source">
-              @foreach($proviences as $provience)
-              <option Value="{{$provience->id}}" {{(isset($mission) && $mission->Mission_Source == $provience->id ? 'selected' : '')}}>{{$provience->Provience_Name}}</option>
-              @endforeach
-            </select>
-          </div>
-          <label class="control-label col-sm-1 div3">to</label>
-          <div class="col-sm-5 div2">
-            <!--<input type="text" class="form-control" name="Mission_Destination" placeholder="Enter Desination" required>-->
-            <select class="form-control" name="Mission_Destination">
-              @foreach($proviences as $provience)
-              <option Value="{{$provience->id}}" {{(isset($mission) && $mission->Mission_Destination == $provience->id ? 'selected' : '')}}>{{$provience->Provience_Name}}</option>
-              @endforeach
-            </select>
-          </div>
-        </div>
-
-        <br><br>
-        <ol class="breadcrumb-info">
-          <li class="breadcrumb-text">
-            Checkpoint of Mission
-          </li>
-
-        </ol>
-        <div class="form-group">
-          <div class="control-group" id="fields">
-            <label class="control-label col-sm-12" for="MissionCheckpointOrder">Add Checkpoint : </label>
-            <input type="hidden" name="CheckpointCount" id="count" value="1" />
-            <div class="controls col-sm-12">
-              <div class="entry input-group col-xs-3" >
-                <input class="form-control" type="text" placeholder="Checkpoint Name" name="MissionCheckpointOrder" id="field1"/>
-                <span class="input-group-btn">
-                  <button class="add-more btn btn-success btn-add" type="button" id="addme"><span class="fa fa-plus"></span></button>
-                </span>
-              </div>
-            </div>
-          </div>
-          @if(isset($error))
-          <div class="alert alert-danger">
-            <strong>Error!</strong>  {{$error}}
-          </div>
-          @endif
-        </div>
+      <div class="breadcrumb-save">
+        @if(isset($mission))
+        <a href="/Missions"><button type="button" class="btn btn-warning divsave">Cancel</button></a>
+        <button type="submit" class="btn btn-success">Update Mission</button>
+        @else
+        <button type="reset" class="btn btn-warning divsave">Reset</button>
+        <button type="submit" class="btn btn-success">New Mission</button>
+        @endif
 
 
-  {!! Form::close() !!}
+
+      </div>
     </div>
+    <!-- /.container-fluid -->
+
   </div>
-  <div class="breadcrumb-save">
-    @if(isset($mission))
-    <a href="/Missions"><button type="button" class="btn btn-warning divsave">Cancel</button></a>
-    <button type="submit" class="btn btn-success">Update Mission</button>
-    @else
-    <button type="reset" class="btn btn-warning divsave">Reset</button>
-    <button type="submit" class="btn btn-success">New Mission</button>
-    @endif
-    
+  @endsection
+  @section('jsfooter')
+  <script src="{{ asset('js/chart/Chart.min.js') }}"></script>
+  <script>
 
-    
-  </div>
-</div>
-<!-- /.container-fluid -->
-
-</div>
-@endsection
-@section('jsfooter')
-    <script src="{{ asset('js/chart/Chart.min.js') }}"></script>
-<script>
-
-  $(document).on('click', '#close-preview', function () {
-    $('.icon-preview').popover('hide');
+    $(document).on('click', '#close-preview', function () {
+      $('.icon-preview').popover('hide');
       // Hover befor close the preview
       $('.icon-preview').hover(
         function () {
@@ -239,7 +239,7 @@
         );
     });
 
-  $(function () {
+    $(function () {
       // Create the close button
       var closebtn = $('<button/>', {
         type: "button",
@@ -288,8 +288,8 @@
         reader.readAsDataURL(file);
       });
     });
-  $(document).on('click', '#close-preview', function () {
-    $('.image-preview').popover('hide');
+    $(document).on('click', '#close-preview', function () {
+      $('.image-preview').popover('hide');
       // Hover befor close the preview
       $('.image-preview').hover(
         function () {
@@ -301,7 +301,7 @@
         );
     });
 
-  $(function () {
+    $(function () {
       // Create the close button
       var closebtn = $('<button/>', {
         type: "button",
@@ -350,49 +350,49 @@
         reader.readAsDataURL(file);
       });
     });
-  var options = {
-    url: "{{url('/api/Checkpoints')}}",
-    getValue: "Checkpoint_Name",
-    list: {
-      match: {
-        enabled: true
-      }
-    },
-  };
-  $(document).ready(function(){
-    var next = 1;
-    $(".add-more").click(function(e){
-      e.preventDefault();
-      var addto = "#field" + next;
-
-      var addRemove = "#field" + (next);
-      next = next + 1;
-      var newIn = '<input class="form-control" type="text" placeholder="Checkpoint Name" name="MissionCheckpointOrder' + next + '" autocomplete="off" id="field' + next + '" />';
-      var newInput = $(newIn);
-      var removeBtn = '<span class="input-group-btn"><button id="remove' + (next - 1) + '" class="btn btn-danger btn-add remove-me" type="button"><span class="fa fa-minus"></span></button></span>';
-      @if(isset($mission->Mission_Status) && $mission->Mission_Status != 0)
-      var removeButton = "";
-      @else
-      var removeButton = $(removeBtn);
-      @endif
-      $(addto).after(newInput);
-      $(addRemove).after(removeButton);
-      $("#field" + next).attr('data-source',$(addto).attr('data-source'));
-      $("#count").val(next);  
-      $('.remove-me').click(function(e){
+    var options = {
+      url: "{{url('/api/Checkpoints')}}",
+      getValue: "Checkpoint_Name",
+      list: {
+        match: {
+          enabled: true
+        }
+      },
+    };
+    $(document).ready(function(){
+      var next = 1;
+      $(".add-more").click(function(e){
         e.preventDefault();
-        var fieldNum = this.id.substring(6);
-        console.log(fieldNum);
-        var fieldID = "#field" + fieldNum;
-        $(this).remove();
-        $(fieldID).remove();
+        var addto = "#field" + next;
+
+        var addRemove = "#field" + (next);
+        next = next + 1;
+        var newIn = '<input class="form-control" type="text" placeholder="Checkpoint Name" name="MissionCheckpointOrder' + next + '" autocomplete="off" id="field' + next + '" />';
+        var newInput = $(newIn);
+        var removeBtn = '<span class="input-group-btn"><button id="remove' + (next - 1) + '" class="btn btn-danger btn-add remove-me" type="button"><span class="fa fa-minus"></span></button></span>';
+        @if(isset($mission->Mission_Status) && $mission->Mission_Status != 0)
+        var removeButton = "";
+        @else
+        var removeButton = $(removeBtn);
+        @endif
+        $(addto).after(newInput);
+        $(addRemove).after(removeButton);
+        $("#field" + next).attr('data-source',$(addto).attr('data-source'));
+        $("#count").val(next);  
+        $('.remove-me').click(function(e){
+          e.preventDefault();
+          var fieldNum = this.id.substring(6);
+          console.log(fieldNum);
+          var fieldID = "#field" + fieldNum;
+          $(this).remove();
+          $(fieldID).remove();
+        });
+        $("#field" + next).easyAutocomplete(options);
+
       });
-      $("#field" + next).easyAutocomplete(options);
-      
-    });
-  
-  $("#field1").easyAutocomplete(options);
-  @if(isset($mission))
+
+      $("#field1").easyAutocomplete(options);
+      @if(isset($mission))
       $('.icon-preview').hover(
         function () {
           $('.icon-preview').popover('show');
@@ -410,43 +410,43 @@
         }
         );
       
-    
-    @if(isset($mission->Checkpoint))
+
+      @if(isset($mission->Checkpoint))
       var flag = 1;
       @foreach($mission->Checkpoint as $checkpoint)
-       $(".add-more").click(); 
-       $("#field"+flag).val("{{$checkpoint->Checkpoint->Checkpoint_Name}}");
-       @if(isset($mission->Mission_Status) && $mission->Mission_Status != 0)
-       $("#field"+flag).prop('disabled', true);
-       @endif
-       flag++;
+      $(".add-more").click(); 
+      $("#field"+flag).val("{{$checkpoint->Checkpoint->Checkpoint_Name}}");
+      @if(isset($mission->Mission_Status) && $mission->Mission_Status != 0)
+      $("#field"+flag).prop('disabled', true);
+      @endif
+      flag++;
       @endforeach
-       @if(isset($mission->Mission_Status) && $mission->Mission_Status != 0)
-       $("#addme").prop('disabled', true);
-       $("#field"+flag).prop('disabled', true);
-       $("#Mission_Status").prop('disabled', true);
-       @endif
-    @endif
-  @endif
-
-    });
-@if(isset($mission) && (sizeof($mission->Checkpoint) == 0))
-        $("#Mission_Status").prop('disabled', true);
-        $("#Mission_Status").click(function(){
-          window.alert("Please save this form before enabled");
-        });
-       @elseif(isset($mission) && (sizeof($mission->Checkpoint) != 0))
-        $("#Mission_Status").prop('disabled', false);
-        $("#Mission_Status").change(function(){
-          window.alert("While this mission is enabled you can not modify Checkpoint of this mission");
-        });
-      @else
-       $("#Mission_Status").click(function(){
-          window.alert("Please save this form before enabled");
-        });
-       $("#Mission_Status").prop('disabled', true);
+      @if(isset($mission->Mission_Status) && $mission->Mission_Status != 0)
+      $("#addme").prop('disabled', true);
+      $("#field"+flag).prop('disabled', true);
+      $("#Mission_Status").prop('disabled', true);
+      @endif
+      @endif
       @endif
 
+    });
+    @if(isset($mission) && (sizeof($mission->Checkpoint) == 0))
+    $("#Mission_Status").prop('disabled', true);
+    $("#Mission_Status").click(function(){
+      window.alert("Please save this form before enabled");
+    });
+    @elseif(isset($mission) && (sizeof($mission->Checkpoint) != 0))
+    $("#Mission_Status").prop('disabled', false);
+    $("#Mission_Status").change(function(){
+      window.alert("While this mission is enabled you can not modify Checkpoint of this mission");
+    });
+    @else
+    $("#Mission_Status").click(function(){
+      window.alert("Please save this form before enabled");
+    });
+    $("#Mission_Status").prop('disabled', true);
+    @endif
 
-</script>
-@endsection
+
+  </script>
+  @endsection
