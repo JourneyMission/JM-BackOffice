@@ -151,6 +151,7 @@
     <script src="{{ asset('js/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('js/popper/popper.min.js') }}"></script>
     <script src="{{ asset('css/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/sb-admin.js') }}"></script>
 
     <!-- Plugin JavaScript -->
     <script src="{{ asset('js/jquery-easing/jquery.easing.min.js') }}"></script>
