@@ -345,7 +345,7 @@
   </div>
 @endsection
 @section('jsfooter')
-<script src="{{ asset('js/chart/chart.min.js') }}"></script>
+<script src="{{ asset('js/chart/Chart.min.js') }}"></script>
 <script src="{{ asset('js/sb-admin.min.js') }}"></script>
 <script type="text/javascript">
   var ctx = document.getElementById("myAreaChart"),
