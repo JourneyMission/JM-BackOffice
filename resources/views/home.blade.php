@@ -410,7 +410,7 @@
         type: "bar",
         data: {
             labels: [
-            @foreach($data['JoinedMissionUser'] as $label)
+            @foreach($data['JoinedMissionCategory'] as $label)
               "{{$label->DATE}}",
             @endforeach
             ],
@@ -419,7 +419,7 @@
                 backgroundColor: "rgba(2,117,216,1)",
                 borderColor: "rgba(2,117,216,1)",
                 data: [
-            @foreach($data['JoinedMissionUser'] as $Value)
+            @foreach($data['JoinedMissionCategory'] as $Value)
               "{{$Value->COUNT}}",
             @endforeach
             ]
