@@ -41,9 +41,6 @@
                 <button type="button" class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i> New</button>
                 </a>
             </div>
-
-            </span>
-          </div>
           </div>
           <div class="card-body">
             <div class="table-responsive">
