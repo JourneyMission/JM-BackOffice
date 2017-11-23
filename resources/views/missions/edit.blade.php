@@ -2,16 +2,7 @@
 
 @section('content')
 <div class="content-wrapper">
- @if ($errors->any())
- <div class="alert alert-danger alert-dismissable">
-  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-  <ul>
-    @foreach ($errors->all() as $error)
-    <li>{{ $error }}</li>
-    @endforeach
-  </ul>
-</div>
-@endif
+ 
 @if(isset($mission))
 
 {!! Form::open(['method' => 'PATCH', 'action' => ['MissionsController@update','id'=>$mission->id],'class'=>'form-horizontal','files'=>true ]) !!}
@@ -22,7 +13,16 @@
 
 @endif
 <div class="container-fluid">
-
+@if ($errors->any())
+ <div class="alert alert-danger alert-dismissable">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <ul>
+    @foreach ($errors->all() as $error)
+    <li>{{ $error }}</li>
+    @endforeach
+  </ul>
+</div>
+@endif
   <!-- Breadcrumbs -->
     <ol class="breadcrumb">
           <li class="breadcrumb-item">
@@ -78,8 +78,14 @@
             </span>
           </div>
         </div>
+        <div>
+              <label class=" col-sm-6 div1"></label>
+              <div class="col-sm-6 div2">
+                <span style="color:gray">.png/.jpg 100*100px</span>
+              </div>
+            </div>
         <div class="form-group">
-          <label class="control-label col-sm-6 div1">Mission Picture :</label>
+          <label class="control-label col-sm-6 div1">Mission Photo :</label>
           <div class="col-sm-6 input-group image-preview">
             @if(isset($mission))
                 <input type="text" class="form-control image-preview-filename" name="image-preview" disabled="disabled" value="{{$mission->Mission_Photo}}" />
@@ -96,12 +102,18 @@
               <div class="btn btn-default image-preview-input">
                 <span class="glyphicon glyphicon-folder-open"></span>
                 <span class="image-preview-input-title">Browse</span>
-                <input type="file" accept="image/png, image/jpeg, image/gif" name="Mission_Photo" value="{{(isset($mission)? $mission->Mission_Photo : '')}}" />
+                <input type="file" accept="image/png, image/jpeg" name="Mission_Photo" value="{{(isset($mission)? $mission->Mission_Photo : '')}}" />
                 <!-- rename it -->
               </div>
             </span>
           </div>
         </div>
+        <div>
+              <label class=" col-sm-6 div1"></label>
+              <div class="col-sm-6 div2">
+                <span style="color:gray">.png/.jpg 68*324px</span>
+              </div>
+            </div>
         <div class="form-group">
           <label class="control-label col-sm-6 div1">Mission Category :</label>
           <div class="col-sm-6 div2">
@@ -121,7 +133,7 @@
         <div class="form-group">
           <label class="control-label col-sm-6 div1">Mission Status :</label>
           <div class="col-sm-3 div2">
-            <input type="checkbox" name="Mission_Status" data-toggle="toggle" data-on="Enable" data-off="Disable" data-onstyle="success" data-offstyle="danger" {{(isset($mission) && $mission->Mission_Status == 1 ? 'checked' : '')}}>
+            <input type="checkbox" id="Mission_Status" name="Mission_Status" data-toggle="toggle" data-on="Enable" data-off="Disable" data-onstyle="success" data-offstyle="danger" {{(isset($mission) && $mission->Mission_Status == 1 ? 'checked' : '')}}>
           </div>
         </div>
       </div>
@@ -182,19 +194,28 @@
               </div>
             </div>
           </div>
+          @if(isset($error))
+          <div class="alert alert-danger">
+            <strong>Error!</strong>  {{$error}}
+          </div>
+          @endif
         </div>
+
 
   {!! Form::close() !!}
     </div>
   </div>
   <div class="breadcrumb-save">
     @if(isset($mission))
-    <a href="/Checkpoints"><button type="button" class="btn btn-warning divsave">Cancel</button></a>
+    <a href="/Missions"><button type="button" class="btn btn-warning divsave">Cancel</button></a>
     <button type="submit" class="btn btn-success">Update Mission</button>
     @else
     <button type="reset" class="btn btn-warning divsave">Reset</button>
     <button type="submit" class="btn btn-success">New Mission</button>
     @endif
+    
+
+    
   </div>
 </div>
 <!-- /.container-fluid -->
@@ -202,6 +223,7 @@
 </div>
 @endsection
 @section('jsfooter')
+    <script src="{{ asset('js/chart/Chart.min.js') }}"></script>
 <script>
 
   $(document).on('click', '#close-preview', function () {
@@ -294,7 +316,7 @@
         html: true,
         title: "<strong>Preview</strong>" + $(closebtn)[0].outerHTML,
         @if(isset($mission))
-        content: "<img src='{{URL::to('/storage/mission/photo/'.$mission->Mission_Photo)}}'' width=250 height=200 />",
+        content: "<img src='{{URL::to('/storage/mission/photo/'.$mission->Mission_Photo)}}'' width=64 height=324 />",
         @else
         content: "There's no image",
         @endif
@@ -340,11 +362,9 @@
   $(document).ready(function(){
     var next = 1;
     $(".add-more").click(function(e){
-      if (next > 9) {
-        alert("Checkpoint must be less than 10");
-      }else{
       e.preventDefault();
       var addto = "#field" + next;
+
       var addRemove = "#field" + (next);
       next = next + 1;
       var newIn = '<input class="form-control" type="text" placeholder="Checkpoint Name" name="MissionCheckpointOrder' + next + '" autocomplete="off" id="field' + next + '" />';
@@ -361,13 +381,14 @@
       $("#count").val(next);  
       $('.remove-me').click(function(e){
         e.preventDefault();
-        var fieldNum = this.id.charAt(this.id.length-1);
+        var fieldNum = this.id.substring(6);
+        console.log(fieldNum);
         var fieldID = "#field" + fieldNum;
         $(this).remove();
         $(fieldID).remove();
       });
       $("#field" + next).easyAutocomplete(options);
-      }
+      
     });
   
   $("#field1").easyAutocomplete(options);
@@ -388,6 +409,8 @@
           $('.image-preview').popover('hide');
         }
         );
+      
+    
     @if(isset($mission->Checkpoint))
       var flag = 1;
       @foreach($mission->Checkpoint as $checkpoint)
@@ -401,10 +424,29 @@
        @if(isset($mission->Mission_Status) && $mission->Mission_Status != 0)
        $("#addme").prop('disabled', true);
        $("#field"+flag).prop('disabled', true);
+       $("#Mission_Status").prop('disabled', true);
        @endif
     @endif
   @endif
 
     });
+@if(isset($mission) && (sizeof($mission->Checkpoint) == 0))
+        $("#Mission_Status").prop('disabled', true);
+        $("#Mission_Status").click(function(){
+          window.alert("Please save this form before enabled");
+        });
+       @elseif(isset($mission) && (sizeof($mission->Checkpoint) != 0))
+        $("#Mission_Status").prop('disabled', false);
+        $("#Mission_Status").change(function(){
+          window.alert("While this mission is enabled you can not modify Checkpoint of this mission");
+        });
+      @else
+       $("#Mission_Status").click(function(){
+          window.alert("Please save this form before enabled");
+        });
+       $("#Mission_Status").prop('disabled', true);
+      @endif
+
+
 </script>
 @endsection

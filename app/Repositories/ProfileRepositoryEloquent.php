@@ -22,7 +22,9 @@ class ProfileRepositoryEloquent extends BaseRepository implements ProfileReposit
         'Profile_Team',
         'Profile_Score',
         'Profile_AccessToken',
-        'Profile_Team'
+        'Profile_Team',
+        'user_id',
+        'Profile_Role'
     ];
     /**
      * Specify Model class name

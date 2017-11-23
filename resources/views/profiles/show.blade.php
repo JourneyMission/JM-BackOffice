@@ -13,10 +13,10 @@
           <li class="Profiles"> / Manage Profiles</li>
         </ol>
         @if (isset($message))
-            <div class="alert alert-success alert-dismissable">
-              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <strong>Success!</strong> {{$message}}
-            </div>
+          <div class="alert alert-success alert-dismissable">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          <strong>Success!</strong> {{$message}}
+          </div>
         @endif
         <!-- Example Tables Card -->
         <div class="card mb-3">

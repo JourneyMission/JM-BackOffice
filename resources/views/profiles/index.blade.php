@@ -12,10 +12,10 @@
           </li>
           <li class="Profiles"> / Manage Profiles</li>
         </ol>
-        @if (isset($message))
+        @if (session()->has('message'))
             <div class="alert alert-success alert-dismissable">
               <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <strong>Success!</strong> {{$message}}
+            <strong>Success!</strong>  {{session('message')}}
             </div>
         @endif
         <!-- Example Tables Card -->
@@ -65,7 +65,8 @@
                     <td>{{ $profile->Profile_Email }}</td>
                     @if ($profile->Profile_Team == NULL)
                         <td>No Data !</td>
-                    @elseif ($profile->Profile_Team == 'Fox')
+                    @elseif ($profile->Profile_Team == 'fox')
+
                         <td><font color="red">Fox</font></td>
                     @else
                         <td><font color="blue">Bear</font></td>
@@ -78,15 +79,38 @@
                     @endif
                     <td>{{ $profile->updated_at }}</td>
                     <td>
-                      <a href="#" onclick="if(confirm('ยืนยันการลบข้อมูล {{ $profile->Profile_Name }} ') == true){
-                            document.getElementById('Delete-form').submit();
+                  @if(Auth::user()->id != $profile->id)
+                      @if($profile->Profile_Role != 1)
+                      <a href="#" onclick="if(confirm('Are you sure to promote {{ $profile->Profile_Name }} ? ') == true){
+                            document.getElementById('Promote-form{{$profile->id}}').submit();
+                        }">
+                      <span class="badge badge-warning"> 
+                        <i class="fa fa-star" aria-hidden="true"></i> Promote</a>
+                      </span>
+                      {!! Form::open(['method' => 'POST', 'action' => ['ProfilesController@promote',$profile->id],'style' => 'display: none;','id' => 'Promote-form'.$profile->id]) !!}
+                      {!! Form::close() !!}
+                      </a>
+                      @elseif($profile->Profile_Role == 1)
+                      <a href="#" onclick="if(confirm('Are you sure to demote {{ $profile->Profile_Name }} ? ') == true){
+                            document.getElementById('Promote-form{{$profile->id}}').submit();
+                        }">
+                      <span class="badge badge-secondary"> 
+                        <i class="fa fa-star" aria-hidden="true"></i> Demote</a>
+                      </span>
+                      {!! Form::open(['method' => 'POST', 'action' => ['ProfilesController@promote',$profile->id],'style' => 'display: none;','id' => 'Promote-form'.$profile->id]) !!}
+                      {!! Form::close() !!}
+                      </a>
+                      @endif
+                      <a href="#" onclick="if(confirm('Are you sure to delete {{ $profile->Profile_Name }} ? ') == true){
+                            document.getElementById('Delete-form{{$profile->id}}').submit();
                         }">
                      <span class="badge badge-danger"> 
                         <i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
                       </span>
-                      {!! Form::open(['method' => 'DELETE', 'action' => ['ProfilesController@destroy',$profile->id],'style' => 'display: none;','id' => 'Delete-form']) !!}
+                      </a>
+                      {!! Form::open(['method' => 'DELETE', 'action' => ['ProfilesController@destroy',$profile->id],'style' => 'display: none;','id' => 'Delete-form'.$profile->id]) !!}
                       {!! Form::close() !!}
-                      
+                      @endif
                     </td>
                   </tr>
                   @endforeach

@@ -72,12 +72,18 @@
                 <div class="btn btn-default image-preview-input">
                   <span class="glyphicon glyphicon-folder-open"></span>
                   <span class="image-preview-input-title">Browse</span>
-                  <input type="file" accept="image/png, image/jpeg, image/gif" name="Badge_Photo" value="{{(isset($badge)? $badge->Badge_Photo : '')}}" />
+                  <input type="file" accept="image/png, image/jpeg" name="Badge_Photo" value="{{(isset($badge)? $badge->Badge_Photo : '')}}" />
                   <!-- rename it -->
                 </div>
               </span>
             </div>
           </div>
+          <div>
+              <label class=" col-sm-6 div1"></label>
+              <div class="col-sm-6 div2">
+                <span style="color:gray">.png/.jpg 100*100px</span>
+              </div>
+            </div>
           <div class="form-group">
             <label class="control-label col-sm-6 div1">Badge Rank :</label>
             <div class="col-sm-6 div2">
@@ -233,7 +239,7 @@
         html: true,
         title: "<strong>Preview</strong>" + $(closebtn)[0].outerHTML,
         @if(isset($badge))
-        content: "<img src='{{URL::to('/storage/badge/icon/'.$badge->Badge_Photo)}}'' width=250 height=200 />",
+        content: "<img src='{{URL::to('/storage/badge'.$badge->Badge_Photo)}}'' width=100 height=100 />",
         @else
         content: "There's no image",
         @endif

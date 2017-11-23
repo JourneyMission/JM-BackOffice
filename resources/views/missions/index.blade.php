@@ -89,7 +89,7 @@
                         <i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
                       </span>
                       </a>
-                      <a href="#" onclick="if(confirm('ยืนยันการลบข้อมูล {{ $mission->Mission_Name }} ') == true){
+                      <a href="#" onclick="if(confirm('Are you sure to delete {{ $mission->Mission_Name }} ') == true){
                             document.getElementById('Delete-form{{$mission->id}}').submit();
                         }">
                      <span class="badge badge-danger"> 

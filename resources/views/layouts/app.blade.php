@@ -154,12 +154,12 @@
 
     <!-- Plugin JavaScript -->
     <script src="{{ asset('js/jquery-easing/jquery.easing.min.js') }}"></script>
-    <script src="{{ asset('js/chart.js/Chart.min.js') }}"></script>
+
     <script src="{{ asset('js/datatables/jquery.dataTables.js') }}"></script>
     <script src="{{ asset('js/datatables/dataTables.bootstrap4.js') }}"></script>
 
     <!-- Custom scripts for this template -->
-    <script src="{{ asset('js/sb-admin.min.js') }}"></script>
+
     <script src="{{ asset('js/bootstrap-toggle.min.js') }}"></script>
     <script src="{{ asset('js/jquery.easy-autocomplete.js') }}"></script>
     <script type="text/javascript">

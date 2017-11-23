@@ -2839,7 +2839,7 @@ tbody.collapse.show {
   display: -ms-flexbox;
   display: flex;
   -ms-flex-align: center;
-      align-items: center;
+      align-items: flex-end;
 }
 
 .input-group-addon:not(:first-child):not(:last-child),

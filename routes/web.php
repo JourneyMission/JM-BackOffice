@@ -34,4 +34,5 @@ Route::group(['middleware' => 'auth:web'], function(){
 	Route::resource('Proviences', ProviencesController::class);
 	Route::resource('Regions', RegionsController::class);
 	Route::resource('Reviews', ReviewsController::class);
+	Route::post('/Promote/{id}', 'ProfilesController@promote');
 });

@@ -54,7 +54,7 @@
           </div>
         </div>
           <div class="form-group">
-          <label class="control-label col-sm-6 div1">Checkpoint Icon :</label>
+          <label class="control-label col-sm-6 div1">Already check-in icon :</label>
           <div class="col-sm-6 input-group icon-preview">
             @if(isset($checkpoint))
                 <input type="text" class="form-control icon-preview-filename" name="icon-preview" disabled="disabled" value="{{$checkpoint->Checkpoint_Icon}}" />
@@ -73,9 +73,9 @@
                 <span class="glyphicon glyphicon-folder-open"></span>
                 <span class="icon-preview-input-title">Browse</span>
                 @if(isset($checkpoint))
-                <input type="file" accept="image/png, image/jpeg, image/gif" name="Checkpoint_Icon" value="{{$checkpoint->Checkpoint_Icon}}" />
+                <input type="file" accept="image/png, image/jpeg" name="Checkpoint_Icon" value="{{$checkpoint->Checkpoint_Icon}}" />
                 @else
-                <input type="file" accept="image/png, image/jpeg, image/gif" name="Checkpoint_Icon" />
+                <input type="file" accept="image/png, image/jpeg" name="Checkpoint_Icon" />
                 @endif
                 
                 <!-- rename it -->
@@ -83,8 +83,15 @@
             </span>
           </div>
         </div>
+
+            <div>
+              <label class=" col-sm-6 div1"></label>
+              <div class="col-sm-6 div2">
+                <span style="color:gray">.png/.jpg 100*100px</span>
+              </div>
+            </div>
         <div class="form-group">
-          <label class="control-label col-sm-6 div1">Checkpoint Gray Icon :</label>
+          <label class="control-label col-sm-6 div1">Not checked in yet icon :</label>
           <div class="col-sm-6 input-group grayicon-preview">
             @if(isset($checkpoint))
                 <input type="text" class="form-control grayicon-preview-filename" name="grayicon-preview" disabled="disabled" value="{{$checkpoint->Checkpoint_GrayIcon}}"/>
@@ -103,9 +110,9 @@
                 <span class="glyphicon glyphicon-folder-open"></span>
                 <span class="grayicon-preview-input-title">Browse</span>
                 @if(isset($checkpoint))
-                <input type="file" accept="image/png, image/jpeg, image/gif" name="Checkpoint_GrayIcon" value="{{$checkpoint->Checkpoint_GrayIcon}}" />
+                <input type="file" accept="image/png, image/jpeg" name="Checkpoint_GrayIcon" value="{{$checkpoint->Checkpoint_GrayIcon}}" />
                 @else
-                <input type="file" accept="image/png, image/jpeg, image/gif" name="Checkpoint_GrayIcon" />
+                <input type="file" accept="image/png, image/jpeg" name="Checkpoint_GrayIcon" />
                 @endif
                 
                 <!-- rename it -->
@@ -113,8 +120,15 @@
             </span>
           </div>
         </div>
+        
+            <div>
+              <label class=" col-sm-6 div1"></label>
+              <div class="col-sm-6 div2">
+                <span style="color:gray">.png/.jpg 100*100px</span>
+              </div>
+            </div>
         <div class="form-group">
-          <label class="control-label col-sm-6 div1">Checkpoint Picture :</label>
+          <label class="control-label col-sm-6 div1">Checkpoint Photo :</label>
           <div class="col-sm-6 input-group image-preview">
             @if(isset($checkpoint) && isset($checkpoint->checkpointPhoto))
                 <input type="text" class="form-control image-preview-filename" name="image-preview" disabled="disabled" value="@foreach($checkpoint->checkpointPhoto as $Photo){{$Photo->Checkpoint_Photo}},
@@ -139,9 +153,9 @@
                     <input type="file" accept="image/png, image/jpeg, image/gif" name="Checkpoint_Photo" value="{{$Photo->Checkpoint_Photo}}"/>
                     @endforeach
                 @elseif(isset($checkpoint))
-                <input type="file" accept="image/png, image/jpeg, image/gif" name="Checkpoint_Photo" />
+                <input type="file" accept="image/png, image/jpeg" name="Checkpoint_Photo" />
                 @else
-                <input type="file" accept="image/png, image/jpeg, image/gif" name="Checkpoint_Photo" />
+                <input type="file" accept="image/png, image/jpeg" name="Checkpoint_Photo" />
                 @endif
                 
                 <!-- rename it -->
@@ -149,6 +163,12 @@
             </span>
           </div>
         </div>
+        <div>
+              <label class=" col-sm-6 div1"></label>
+              <div class="col-sm-6 div2">
+                <span style="color:gray">.png/.jpg 320*240px</span>
+              </div>
+            </div>
         <div class="form-group">
           <label class="control-label col-sm-6 div1">Checkpoint Province :</label>
           <div class="col-sm-6 div2">
@@ -353,7 +373,7 @@
         html: true,
         title: "<strong>Preview</strong>" + $(closebtn)[0].outerHTML,
         @if(isset($checkpoint))
-        content: "<img src='{{URL::to('/storage/checkpoint/icon/'.$checkpoint->Checkpoint_Icon)}}'' width=250 height=200 />",
+        content: "<img src='{{URL::to('/storage/checkpoint/icon/'.$checkpoint->Checkpoint_Icon)}}'' width=100 height=100 />",
         @else
         content: "There's no image",
         @endif
@@ -415,7 +435,7 @@
         html: true,
         title: "<strong>Preview</strong>" + $(closebtn)[0].outerHTML,
         @if(isset($checkpoint))
-        content: "<img src='{{URL::to('/storage/checkpoint/grayicon/'.$checkpoint->Checkpoint_GrayIcon)}}'' width=250 height=200 />",
+        content: "<img src='{{URL::to('/storage/checkpoint/grayicon/'.$checkpoint->Checkpoint_GrayIcon)}}'' width=100 height=100 />",
         @else
         content: "There's no image",
         @endif
