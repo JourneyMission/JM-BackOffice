@@ -123,6 +123,33 @@ class MissionsController extends Controller
             ]);
         }
     }
+
+    public function CheckpointCheck($request){
+        if($request->CheckpointCount!= 0){
+            if (isset($request->MissionCheckpointOrder)) {
+                $checkpoint = $this->checkpoint->findWhere([
+                        'Checkpoint_Name'=> $request->MissionCheckpointOrder
+                    ])->first();
+                    if ($checkpoint == null) {
+                        return false;
+                    }
+            }
+            for ($i=2; $i <= $request->CheckpointCount; $i++) {
+                $flag = "MissionCheckpointOrder".$i;
+                if (isset($request->$flag)) {
+                    $checkpoint = $this->checkpoint->findWhere([
+                        'Checkpoint_Name'=> $request->$flag
+                    ])->first();
+                    if ($checkpoint == null) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        return true;
+        
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -142,40 +169,45 @@ class MissionsController extends Controller
                 $request->Mission_Status = 0;
             }
 
-            $mission = $this->repository->create($request->all());
+            if(MissionsController::CheckpointCheck($request)){
 
-            if($request->hasFile('Mission_Icon')){
-                MissionsController::uploadIcon($request,$mission->id);
-            }
-            if($request->hasFile('Mission_Photo')){
-                MissionsController::uploadPhoto($request,$mission->id);
-            }
+                $mission = $this->repository->create($request->all());
 
-            if ($request->CheckpointCount!= 0) {
-                if (isset($request->MissionCheckpointOrder)) {
-                    MissionsController::manageCheckpoint($request->MissionCheckpointOrder,$mission->id,1);
+                if($request->hasFile('Mission_Icon')){
+                    MissionsController::uploadIcon($request,$mission->id);
                 }
-                for ($i=2; $i <= $request->CheckpointCount; $i++) {
-                    $flag = "MissionCheckpointOrder".$i;
-                    
-                    if (isset($request->$flag)) {
-                        MissionsController::manageCheckpoint($request->$flag,$mission->id,$i);
+                if($request->hasFile('Mission_Photo')){
+                    MissionsController::uploadPhoto($request,$mission->id);
+                }
+
+                if ($request->CheckpointCount!= 0) {
+                    if (isset($request->MissionCheckpointOrder)) {
+                        MissionsController::manageCheckpoint($request->MissionCheckpointOrder,$mission->id,1);
+                    }
+                    for ($i=2; $i <= $request->CheckpointCount; $i++) {
+                        $flag = "MissionCheckpointOrder".$i;
+
+                        if (isset($request->$flag)) {
+                            MissionsController::manageCheckpoint($request->$flag,$mission->id,$i);
+                        }
                     }
                 }
+
+
+                $response = [
+                    'message' => 'Mission created.',
+                    'data'    => $mission->toArray(),
+                ];
+
+                if ($request->wantsJson()) {
+
+                    return response()->json($response);
+                }
+
+                return redirect('/Missions')->with('message', $response['message']);
+            }else{
+                return redirect()->back()->with('message',"Checkpoint is Invalid Please Select from List")->withInput();
             }
-            
-
-            $response = [
-                'message' => 'Mission created.',
-                'data'    => $mission->toArray(),
-            ];
-
-            if ($request->wantsJson()) {
-
-                return response()->json($response);
-            }
-
-            return redirect('/Missions')->with('message', $response['message']);
         } catch (ValidatorException $e) {
             if ($request->wantsJson()) {
                 return response()->json([
@@ -248,42 +280,49 @@ class MissionsController extends Controller
         try {
 
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
-            if ($request->Mission_Status == 'on') {
-                $request->merge(['Mission_Status' => 1]);
-            }else{
-                $request->Mission_Status = 0;
-            }
-            $mission = $this->repository->update($request->all(), $id);
-            if($request->hasFile('Mission_Icon')){
-                MissionsController::uploadIcon($request,$id);
-            }
-            if($request->hasFile('Mission_Photo')){
-                MissionsController::uploadPhoto($request,$id);
-            }
-            if ($request->CheckpointCount!= 0) {
-                if (isset($request->MissionCheckpointOrder)) {
-                    MissionsController::manageCheckpoint($request->MissionCheckpointOrder,$mission->id,1);
+            if(MissionsController::CheckpointCheck($request)){
+                if ($request->Mission_Status == 'on') {
+                    $request->merge(['Mission_Status' => 1]);
+                }else{
+                    $request->Mission_Status = 0;
                 }
-                for ($i=2; $i <= $request->CheckpointCount; $i++) {
-                    $flag = "MissionCheckpointOrder".$i;
-                    
-                    if (isset($request->$flag)) {
-                        MissionsController::manageCheckpoint($request->$flag,$mission->id,$i);
+                $mission = $this->repository->update($request->all(), $id);
+                if($request->hasFile('Mission_Icon')){
+                    MissionsController::uploadIcon($request,$id);
+                }
+                if($request->hasFile('Mission_Photo')){
+                    MissionsController::uploadPhoto($request,$id);
+                }
+                if ($request->CheckpointCount!= 0) {
+                    $this->missionCheckpoint->deleteWhere([
+                        'Mission_ID' => $id
+                    ]);
+                    if (isset($request->MissionCheckpointOrder)) {
+                        MissionsController::manageCheckpoint($request->MissionCheckpointOrder,$mission->id,1);
+                    }
+                    for ($i=2; $i <= $request->CheckpointCount; $i++) {
+                        $flag = "MissionCheckpointOrder".$i;
+
+                        if (isset($request->$flag)) {
+                            MissionsController::manageCheckpoint($request->$flag,$mission->id,$i);
+                        }
                     }
                 }
+
+                $response = [
+                    'message' => 'Mission updated.',
+                    'data'    => $mission->toArray(),
+                ];
+
+                if ($request->wantsJson()) {
+
+                    return response()->json($response);
+                }
+
+                return redirect('/Missions')->with('message', $response['message']);
+            }else{
+                return redirect()->back()->withErrors("Checkpoint Name is Invalid Please Select from List")->withInput();
             }
-
-            $response = [
-                'message' => 'Mission updated.',
-                'data'    => $mission->toArray(),
-            ];
-
-            if ($request->wantsJson()) {
-
-                return response()->json($response);
-            }
-
-            return redirect('/Missions')->with('message', $response['message']);
         } catch (ValidatorException $e) {
 
             if ($request->wantsJson()) {
@@ -322,45 +361,45 @@ class MissionsController extends Controller
     }
 
     public function Proviences(){
-       $source = $this->repository->scopeQuery(function($query){
-            return $query->select('proviences.id','proviences.Provience_Name')->distinct()->join('proviences','Mission_Source','=','proviences.id')->orderBy('proviences.id');
-        })->get();
-       $destination = $this->repository->scopeQuery(function($query){
-            return $query->select('proviences.id','proviences.provience_Name')->distinct()->join('proviences','Mission_Destination','=','proviences.id')->orderBy('proviences.id');
-        })->get();
-       if (request()->wantsJson()) {
+     $source = $this->repository->scopeQuery(function($query){
+        return $query->select('proviences.id','proviences.Provience_Name')->distinct()->join('proviences','Mission_Source','=','proviences.id')->orderBy('proviences.id');
+    })->get();
+     $destination = $this->repository->scopeQuery(function($query){
+        return $query->select('proviences.id','proviences.provience_Name')->distinct()->join('proviences','Mission_Destination','=','proviences.id')->orderBy('proviences.id');
+    })->get();
+     if (request()->wantsJson()) {
 
-            return response()->json([
-                'source' => $source,
-                'destination' => $destination,
-            ]);
-        }
+        return response()->json([
+            'source' => $source,
+            'destination' => $destination,
+        ]);
     }
-    public function RecommendMission($id){
-        
-        $join = $this->JoinMissionRepository->findByField('Profile_ID', $id);
-        $join_missions = array();
-        foreach ($join as $k => $v) {
-            array_push($join_missions, $v["Mission_ID"]);
-        }
-        if (empty($join_missions)) {
-            $missions = $this->repository->all();
-        }else{
-            $missions = $this->repository->scopeQuery(function($query){
-    return $query->
-               selectRaw('missions.*,(SELECT COUNT(join_missions.id) FROM join_missions WHERE join_missions.Mission_ID = missions.id  GROUP BY join_missions.Mission_ID)As COUNT')->
-               where('missions.Mission_Status',1)->
-               orderBy('count','DESC');
-})->findWhereNotIn('missions.id', $join_missions);
-        }
-        
+}
+public function RecommendMission($id){
 
-        if (request()->wantsJson()) {
-            
-            return response()->json([
-                'data' => $missions,
-            ]);
-        }
-        return view('missions.index', compact('missions'));
+    $join = $this->JoinMissionRepository->findByField('Profile_ID', $id);
+    $join_missions = array();
+    foreach ($join as $k => $v) {
+        array_push($join_missions, $v["Mission_ID"]);
     }
+    if (empty($join_missions)) {
+        $missions = $this->repository->all();
+    }else{
+        $missions = $this->repository->scopeQuery(function($query){
+            return $query->
+            selectRaw('missions.*,(SELECT COUNT(join_missions.id) FROM join_missions WHERE join_missions.Mission_ID = missions.id  GROUP BY join_missions.Mission_ID)As COUNT')->
+            where('missions.Mission_Status',1)->
+            orderBy('count','DESC');
+        })->findWhereNotIn('missions.id', $join_missions);
+    }
+
+
+    if (request()->wantsJson()) {
+
+        return response()->json([
+            'data' => $missions,
+        ]);
+    }
+    return view('missions.index', compact('missions'));
+}
 }

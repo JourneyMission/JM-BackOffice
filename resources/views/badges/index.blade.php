@@ -88,7 +88,7 @@
                       <span class="badge badge-warning">
                         <i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
                       </span>
-                      <a href="#" onclick="if(confirm('ยืนยันการลบข้อมูล {{ $badge->Badge_Name }} ') == true){
+                      <a href="#" onclick="if(confirm('Are you sure to delete {{ $badge->Badge_Name }} ') == true){
                             document.getElementById('Delete-form{{$badge->id}}').submit();
                         }">
                      <span class="badge badge-danger"> 

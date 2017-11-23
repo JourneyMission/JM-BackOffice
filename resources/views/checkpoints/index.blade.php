@@ -92,7 +92,7 @@
                         <i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
                       </span>
                       </a>
-                      <a href="#" onclick="if(confirm('ยืนยันการลบข้อมูล {{ $checkpoint->Checkpoint_Name }} ') == true){
+                      <a href="#" onclick="if(confirm('Are you sure to delete {{ $checkpoint->Checkpoint_Name }} ') == true){
                             document.getElementById('Delete-form{{$checkpoint->id}}').submit();
                         }">
                      <span class="badge badge-danger"> 

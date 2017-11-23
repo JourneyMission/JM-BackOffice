@@ -13,6 +13,7 @@ use App\Repositories\ProfileRepository;
 use App\Repositories\CheckinRepository;
 use App\Repositories\JoinMissionRepository;
 use App\Validators\ProfileValidator;
+use App\User;
 
 
 class ProfilesController extends Controller
@@ -115,7 +116,6 @@ class ProfilesController extends Controller
         $rank = $this->repository->orderBy('Profile_Score','desc')
         ->findWhere([['Profile_Score', '>=', $Myprofile['Profile_Score']]])->count();
         if (request()->wantsJson()) {
-
             return response()->json([
                 'data' => $profile,
                 'mission' => $mission,
@@ -123,7 +123,6 @@ class ProfilesController extends Controller
                 'rank' => $rank
             ]);
         }
-
         return view('profiles.show', compact('profile'));
     }
 
@@ -137,9 +136,7 @@ class ProfilesController extends Controller
      */
     public function edit($id)
     {
-
         $profile = $this->repository->find($id);
-
         return view('profiles.edit', compact('profile'));
     }
 
@@ -236,5 +233,49 @@ class ProfilesController extends Controller
         }
 
         
+    }
+
+    public function promote($id)
+    {
+
+        try {
+            $profile = $this->repository->find($id);
+            $user = User::whereEmail($profile->Profile_Email)->first();
+
+            if (!$user) {
+                $user = User::create([
+                    'email' => $profile->Profile_Email,
+                    'name' => $profile->Profile_Name
+                ]);
+                $user = User::whereEmail($profile->Profile_Email)->first(); 
+                
+            }
+            if($profile->Profile_Role == 0){
+            $this->repository->update(['Profile_Role'=> 1 ], $id);
+            $response = [
+                'message' => 'Already Promoted.',
+                'data'    => $profile->toArray(),
+            ];
+            }else{
+                $this->repository->update(['Profile_Role'=> 0 ], $id);
+            $response = [
+                'message' => 'Already Demoted.',
+                'data'    => $profile->toArray(),
+            ];
+            }
+
+            return redirect()->back()->with('message', $response['message']);
+        } catch (ValidatorException $e) {
+
+            if ($request->wantsJson()) {
+
+                return response()->json([
+                    'error'   => true,
+                    'message' => $e->getMessageBag()
+                ]);
+            }
+
+            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
+        }
     }
 }

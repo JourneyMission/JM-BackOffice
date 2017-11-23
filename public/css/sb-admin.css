@@ -546,3 +546,15 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
+.input-group-addon,
+.input-group-btn,
+.input-group .form-control {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+      align-items: flex-end;
+}
+
+.add-more{
+  margin-left: -10;
+}
